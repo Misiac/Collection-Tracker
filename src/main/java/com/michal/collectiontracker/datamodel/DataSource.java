@@ -12,29 +12,40 @@ import java.sql.*;
 
 public class DataSource {
 
-    public final String dbLocation = "testcollection.sav";
-    public final String CONNECTION_STRING = "jdbc:sqlite:" + dbLocation;
+    private final String CONNECTION_STRING_START = "jdbc:sqlite:";
+    private final String CONNECTION_STRING;
 
     private String storeStatement = "INSERT INTO Items VALUES(1,'testName',?)";
     private PreparedStatement store;
-    private DataSource dataSource;
 
-    public void initialize() {
+    public DataSource(String absolutePath) {
+        this.CONNECTION_STRING = CONNECTION_STRING_START + absolutePath;
+
         try {
+            System.out.println(CONNECTION_STRING);
 
-            Class.forName("org.sqlite.JDBC");
             Connection connection = DriverManager.getConnection(CONNECTION_STRING);
 
             Statement statement = connection.createStatement();
-            statement.execute("CREATE TABLE IF NOT EXISTS Items (ID Int PRIMARY KEY NOT NULL," +
-                    "NAME TEXT NOT NULL," +
-                    "PHOTO BLOB NOT NULL)");
+//            statement.execute("CREATE TABLE IF NOT EXISTS Items (ID Int PRIMARY KEY NOT NULL," +
+//                    "NAME TEXT NOT NULL," +
+//                    "PHOTO BLOB NOT NULL)");
+            // ^ this is for testing purposes
 
             store = connection.prepareStatement(storeStatement);
+
+            statement.execute("SELECT * FROM Items");
+            ResultSet resultSet = statement.getResultSet();
+            while (resultSet.next()) {
+                System.out.println(resultSet.getString(1));
+                System.out.println(resultSet.getString(2));
+            }
         } catch (Exception e) {
-            System.out.println("Error" + e.getMessage());
+            System.out.println("Data source error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+
 
     public Image storeFile(File file) throws IOException, SQLException {
 
@@ -43,13 +54,6 @@ public class DataSource {
         return new Image(new FileInputStream(file));
     }
 
-    public DataSource getDataSource() {
-        if (dataSource == null) {
-            dataSource = new DataSource();
-        }
-        return dataSource;
-
-    }
 
     private static byte[] covertFileToByteArray(File file) {
         ByteArrayOutputStream bos = null;

@@ -12,7 +12,7 @@
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Open collection"/>
+                        <MenuItem mnemonicParsing="false" text="Open collection" onAction="#chooseFile"/>
                     </items>
                 </Menu>
 

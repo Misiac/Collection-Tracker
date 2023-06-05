@@ -7,10 +7,11 @@ public class CollectionItem {
     String name;
 
     Image image;
-    boolean isChecked;
+    boolean isOwned;
 
 
     public void imageToByteArray(Image image) {
 
     }
+
 }

@@ -12,7 +12,7 @@ public class Application extends javafx.application.Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("mainwindow-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
 
-        stage.setTitle("Hello!");
+        stage.setTitle("Collection Tracker");
         stage.setScene(scene);
         stage.show();
 
