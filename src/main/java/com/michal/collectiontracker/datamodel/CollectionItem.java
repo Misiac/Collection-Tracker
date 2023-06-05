@@ -10,8 +10,26 @@ public class CollectionItem {
     boolean isOwned;
 
 
-    public void imageToByteArray(Image image) {
-
+    public CollectionItem() {
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public void setOwned(boolean owned) {
+        isOwned = owned;
+    }
+
+    public Image getImage() {
+        return image;
+    }
 }

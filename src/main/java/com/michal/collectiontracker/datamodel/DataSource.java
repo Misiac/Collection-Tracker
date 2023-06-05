@@ -1,8 +1,6 @@
 
 package com.michal.collectiontracker.datamodel;
 
-import javafx.scene.image.Image;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,46 +12,51 @@ public class DataSource {
 
     private final String CONNECTION_STRING_START = "jdbc:sqlite:";
     private final String CONNECTION_STRING;
+    private Connection connection;
+    private PreparedStatement queryItems;
+    private PreparedStatement queryInfo;
 
-    private String storeStatement = "INSERT INTO Items VALUES(1,'testName',?)";
-    private PreparedStatement store;
+//    private String storeStatement = "INSERT INTO Items VALUES(1,'testName',?)";
+//    private PreparedStatement store;
+
 
     public DataSource(String absolutePath) {
         this.CONNECTION_STRING = CONNECTION_STRING_START + absolutePath;
 
         try {
-            System.out.println(CONNECTION_STRING);
 
-            Connection connection = DriverManager.getConnection(CONNECTION_STRING);
+            connection = DriverManager.getConnection(CONNECTION_STRING);
 
-            Statement statement = connection.createStatement();
-//            statement.execute("CREATE TABLE IF NOT EXISTS Items (ID Int PRIMARY KEY NOT NULL," +
-//                    "NAME TEXT NOT NULL," +
-//                    "PHOTO BLOB NOT NULL)");
-            // ^ this is for testing purposes
+            queryItems = connection.prepareStatement("SELECT * FROM Items");
+            queryInfo = connection.prepareStatement("SELECT * FROM Info");
 
-            store = connection.prepareStatement(storeStatement);
-
-            statement.execute("SELECT * FROM Items");
-            ResultSet resultSet = statement.getResultSet();
-            while (resultSet.next()) {
-                System.out.println(resultSet.getString(1));
-                System.out.println(resultSet.getString(2));
-            }
         } catch (Exception e) {
             System.out.println("Data source error: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
+    public ResultSet queryItems() {
 
-    public Image storeFile(File file) throws IOException, SQLException {
-
-        store.setBytes(1, covertFileToByteArray(file));
-        store.execute();
-        return new Image(new FileInputStream(file));
+        try {
+            queryItems.execute();
+            return queryItems.getResultSet();
+        } catch (SQLException e) {
+            System.out.println("Error executing statement");
+            return null;
+        }
     }
 
+    public String queryCollectionInfo() {
+        try {
+            queryInfo.execute();
+            return queryInfo.getResultSet().getString(1);
+
+        } catch (SQLException e) {
+            System.out.println("Error Executing infoquery");
+            return null;
+        }
+    }
 
     private static byte[] covertFileToByteArray(File file) {
         ByteArrayOutputStream bos = null;
@@ -69,4 +72,31 @@ public class DataSource {
         }
         return bos != null ? bos.toByteArray() : null;
     }
+
+    public void close() {
+        try {
+            if (queryItems != null) {
+                queryItems.close();
+            }
+            if (queryInfo != null) {
+                queryItems.close();
+            }
+
+            if (connection != null) {
+                connection.close();
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Couldn't close the db " + e.getMessage());
+        }
+    }
+
+//    public Image storeFile(File file) throws IOException, SQLException {
+//
+//        store.setBytes(1, covertFileToByteArray(file));
+//        store.execute();
+//        return new Image(new FileInputStream(file));
+//    }
+
+
 }

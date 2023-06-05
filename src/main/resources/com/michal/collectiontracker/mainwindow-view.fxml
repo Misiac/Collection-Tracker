@@ -26,13 +26,13 @@
     </top>
 
     <left>
-        <Button fx:id="open" text="open" onAction="#chooseFile"/>
+
+    </left>
+    <center>
         <ImageView pickOnBounds="true" preserveRatio="true" fx:id="imageView">
 
         </ImageView>
-    </left>
-
-
+    </center>
 
 
 </BorderPane>

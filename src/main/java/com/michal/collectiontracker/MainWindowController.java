@@ -3,6 +3,7 @@ package com.michal.collectiontracker;
 import com.michal.collectiontracker.datamodel.Collection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 
@@ -13,9 +14,6 @@ import java.util.List;
 public class MainWindowController {
     @FXML
     public ImageView imageView;
-
-    @FXML
-    public Button open;
     List<Collection> collections = new LinkedList<>();
 
     @FXML
@@ -40,10 +38,13 @@ public class MainWindowController {
 
             } catch (Exception e) {
                 System.out.println("File not loaded properly");
+                e.printStackTrace();
             }
-        }else {
+        } else {
             System.out.println("Collection is already present");
         }
+//        Image image = collections.get(0).getCollectionItems().get(0).getImage();
+//        imageView.setImage(image);
 
     }
 }
