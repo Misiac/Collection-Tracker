@@ -11,6 +11,7 @@ public class Application extends javafx.application.Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("mainwindow-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
+        scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
 
         stage.setTitle("Collection Tracker");
         stage.setScene(scene);

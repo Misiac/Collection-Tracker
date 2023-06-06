@@ -4,7 +4,8 @@ import com.michal.collectiontracker.datamodel.Collection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
@@ -25,12 +26,8 @@ public class MainWindowController {
     @FXML
     public BorderPane rootPane;
     List<Collection> collections = new LinkedList<>();
-    public static final String BASIC_STYLE =
-            "-fx-font-size:15;" +
-                    "-fx-font-weight: bold;" +
-                    "-fx-border-width: 0 0 2 0;" +
-                    "-fx-border-color: black;";
-    public static final String BASIC_COLOR = "-fx-background-color:#989898;";
+    ToggleGroup buttonsGroup = new ToggleGroup();
+
     public static final String CLICKED_COLOR = "-fx-background-color:#8C8C8C;";
 
     @FXML
@@ -52,17 +49,16 @@ public class MainWindowController {
             try {
                 Collection newCollection = new Collection(file);
                 collections.add(newCollection);
-                Button button = new Button(newCollection.getCollectionName());
+                ToggleButton button = new ToggleButton(newCollection.getCollectionName());
                 button.setAlignment(Pos.BOTTOM_LEFT);
                 button.setMaxWidth(Double.MAX_VALUE);
                 button.setPrefHeight(50);
                 button.setWrapText(true);
-                button.setStyle(BASIC_STYLE + BASIC_COLOR);
+                button.setToggleGroup(buttonsGroup);
 
-                button.setOnAction(actionEvent -> button.setStyle(BASIC_STYLE + CLICKED_COLOR));
-
-
+                button.setOnAction(this::handleCollectionChange);
                 leftVBox.getChildren().add(button);
+
 
             } catch (Exception e) {
                 System.out.println("File not loaded properly");
@@ -74,6 +70,7 @@ public class MainWindowController {
     }
 
     private void handleCollectionChange(ActionEvent actionEvent) {
+
 
     }
 
