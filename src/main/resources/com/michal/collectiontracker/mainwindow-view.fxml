@@ -7,10 +7,11 @@
 
 
     <top>
-        <MenuBar>
+        <MenuBar >
             <Menu mnemonicParsing="false" text="File">
                 <MenuItem mnemonicParsing="false" text="Open collection" onAction="#chooseFile"/>
-                <MenuItem mnemonicParsing="false" text="Exit" onAction="#chooseFile"/>
+                <MenuItem mnemonicParsing="false" text="Exit" />
+                <MenuItem mnemonicParsing="false" text="TEST" onAction="#tests"/>
             </Menu>
 
             <Menu mnemonicParsing="false" text="Help">
@@ -20,9 +21,12 @@
     </top>
 
     <left>
-        <VBox fx:id="leftVBox" prefWidth="${rootPane.width*0.17}">
+        <GridPane style="-fx-background-color:#C0C0C0">
+            <VBox fx:id="leftVBox" prefWidth="${rootPane.width*0.17}"
+                  GridPane.columnIndex="0" GridPane.rowIndex="0">
 
-        </VBox>
+            </VBox>
+        </GridPane>
     </left>
 
 
@@ -30,13 +34,13 @@
 
         <BorderPane>
             <top>
-                <StackPane fx:id="stackPane" prefHeight="${rootPane.height*0.22}" prefWidth="1015.0">
-                    <Button text="TESTING" onAction="#tests"/>
+                <StackPane fx:id="stackPane" prefHeight="${rootPane.height*0.22}" prefWidth="1015.0"
+                style="-fx-background-color:#A9A9A9">
                 </StackPane>
             </top>
 
             <center>
-                <FlowPane fx:id="flowPane">
+                <FlowPane fx:id="flowPane" style="-fx-background-color:#D8D8D8">
 
                 </FlowPane>
             </center>

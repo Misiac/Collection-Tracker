@@ -18,6 +18,15 @@ public class Collection {
     private int numberOfItems;
     private File file;
     private String collectionName;
+    private Image backgroundImage;
+
+    public String getCollectionName() {
+        return collectionName;
+    }
+
+    public DataSource getThisDatasource() {
+        return thisDatasource;
+    }
 
     public Collection(File collectionFile) throws SQLException, IOException {
         this.file = collectionFile;
@@ -36,8 +45,13 @@ public class Collection {
             InputStream inputStream = items.getBinaryStream(3);
             newItem.setImage(new Image(inputStream));
             collectionItems.add(newItem);
+            numberOfItems++;
         }
-        this.collectionName = thisDatasource.queryCollectionInfo();
+        ResultSet collectionInfo = thisDatasource.queryCollectionInfo();
+        this.collectionName = collectionInfo.getString(1);
+        if (collectionInfo.getBinaryStream(2) != null) {
+            this.backgroundImage = new Image(collectionInfo.getBinaryStream(2));
+        }
     }
 
     public void loadCollectionFromFile(File collection) {

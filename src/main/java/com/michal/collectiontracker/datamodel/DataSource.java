@@ -16,7 +16,7 @@ public class DataSource {
     private PreparedStatement queryItems;
     private PreparedStatement queryInfo;
 
-//    private String storeStatement = "INSERT INTO Items VALUES(1,'testName',?)";
+    //    private String storeStatement = "INSERT INTO Items VALUES(1,'testName',?)";
 //    private PreparedStatement store;
 
 
@@ -47,14 +47,16 @@ public class DataSource {
         }
     }
 
-    public String queryCollectionInfo() {
+    public ResultSet queryCollectionInfo() {
         try {
             queryInfo.execute();
-            return queryInfo.getResultSet().getString(1);
+            return queryInfo.getResultSet();
 
         } catch (SQLException e) {
             System.out.println("Error Executing infoquery");
             return null;
+        }finally {
+
         }
     }
 
@@ -79,7 +81,7 @@ public class DataSource {
                 queryItems.close();
             }
             if (queryInfo != null) {
-                queryItems.close();
+                queryInfo.close();
             }
 
             if (connection != null) {
