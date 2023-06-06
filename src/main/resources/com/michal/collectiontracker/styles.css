@@ -1,13 +1,31 @@
 .toggle-button {
-    -fx-background-color:#989898;
+    -fx-background-color:#A9A9A9;
     -fx-font-size:15;
     -fx-font-weight: bold;
-    -fx-border-width: 1 1 1 1;
-    -fx-border-color: black;
+    -fx-border-width: 0 0 0 0;
+    font-family: 'JetBrains Mono', monospace;
 }
 .toggle-button:selected{
-    -fx-background-color:#8C8C8C;
+    -fx-background-color:#D3D3D3;
 }
 .toggle-button:hover{
+    -fx-background-color:#C0C0C0;
 
+}
+.toggle-button:hover:selected{
+    -fx-background-color:#DCDCDC;
+}
+#rootPane{
+}
+#leftVBox{
+}
+#gridPane{
+    -fx-background-color:#A9A9A9;
+}
+#stackPane{
+
+    -fx-background-color:#808080;
+}
+#flowPane{
+    -fx-background-color:#696969;
 }
