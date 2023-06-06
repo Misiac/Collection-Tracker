@@ -15,13 +15,18 @@ public class Collection {
 
     private List<CollectionItem> collectionItems = new LinkedList<>();
     private DataSource thisDatasource;
-    private int numberOfItems;
     private File file;
     private String collectionName;
     private Image backgroundImage;
+    private int totalNumberOfItems;
+    private int numberOfItemsOwned;
 
     public String getCollectionName() {
         return collectionName;
+    }
+
+    public Image getBackgroundImage() {
+        return backgroundImage;
     }
 
     public DataSource getThisDatasource() {
@@ -30,22 +35,29 @@ public class Collection {
 
     public Collection(File collectionFile) throws SQLException, IOException {
         this.file = collectionFile;
-        this.numberOfItems = 0;
         thisDatasource = new DataSource(collectionFile.getAbsolutePath());
         ResultSet items = thisDatasource.queryItems();
+
+        numberOfItemsOwned = 0;
 
         while (items.next()) {
             CollectionItem newItem = new CollectionItem();
 
             newItem.setId(items.getInt(1));
             newItem.setName(items.getString(2));
-            if (items.getInt(4) == 1) newItem.setOwned(true);
-            else newItem.setOwned(false);
+            if (items.getInt(4) == 1) {
+                newItem.setOwned(true);
+                numberOfItemsOwned++;
+
+            } else {
+                newItem.setOwned(false);
+            }
+            totalNumberOfItems++;
 
             InputStream inputStream = items.getBinaryStream(3);
             newItem.setImage(new Image(inputStream));
             collectionItems.add(newItem);
-            numberOfItems++;
+
         }
         ResultSet collectionInfo = thisDatasource.queryCollectionInfo();
         this.collectionName = collectionInfo.getString(1);
@@ -64,6 +76,14 @@ public class Collection {
 
     public List<CollectionItem> getCollectionItems() {
         return collectionItems;
+    }
+
+    public int getTotalNumberOfItems() {
+        return totalNumberOfItems;
+    }
+
+    public int getNumberOfItemsOwned() {
+        return numberOfItemsOwned;
     }
 }
 

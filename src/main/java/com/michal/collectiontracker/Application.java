@@ -16,6 +16,8 @@ public class Application extends javafx.application.Application {
         stage.setTitle("Collection Tracker");
         stage.setScene(scene);
         stage.show();
+        stage.setResizable(false);
+        //^ maybe someday?
 
 
     }

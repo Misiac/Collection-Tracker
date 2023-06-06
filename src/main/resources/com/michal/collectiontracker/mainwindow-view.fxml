@@ -36,7 +36,8 @@
 
         <BorderPane>
             <top>
-                <StackPane fx:id="stackPane" prefHeight="${rootPane.height*0.22}" prefWidth="1015.0">
+                <StackPane fx:id="stackPane" prefHeight="${rootPane.height*0.22}"
+                           maxHeight="${rootPane.height*0.22}" prefWidth="1015.0">
                     <ImageView fx:id="collectionImage">
                         <image>
 <!--                            <Image url="@test.png" />-->

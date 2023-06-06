@@ -32,4 +32,16 @@ public class CollectionItem {
     public Image getImage() {
         return image;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isOwned() {
+        return isOwned;
+    }
 }
