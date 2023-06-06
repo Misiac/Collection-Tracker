@@ -1,10 +1,12 @@
 package com.michal.collectiontracker;
 
 import com.michal.collectiontracker.datamodel.Collection;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -14,6 +16,9 @@ import java.util.List;
 public class MainWindowController {
     @FXML
     public ImageView imageView;
+    public VBox leftVBox;
+    public StackPane stackPane;
+    public FlowPane flowPane;
     List<Collection> collections = new LinkedList<>();
 
     @FXML
@@ -46,5 +51,12 @@ public class MainWindowController {
 //        Image image = collections.get(0).getCollectionItems().get(0).getImage();
 //        imageView.setImage(image);
 
+    }
+
+    @FXML
+    public void tests() {
+        leftVBox.setStyle("-fx-background-color:red");
+        stackPane.setStyle("-fx-background-color:blue");
+        flowPane.setStyle("-fx-background-color:green");
     }
 }

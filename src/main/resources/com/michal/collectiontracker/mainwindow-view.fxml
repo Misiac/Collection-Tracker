@@ -1,37 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.michal.collectiontracker.MainWindowController">
+            fx:controller="com.michal.collectiontracker.MainWindowController" fx:id="rootPane">
 
 
     <top>
         <MenuBar>
-            <menus>
-                <Menu mnemonicParsing="false" text="File">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Open collection" onAction="#chooseFile"/>
-                    </items>
-                </Menu>
+            <Menu mnemonicParsing="false" text="File">
+                <MenuItem mnemonicParsing="false" text="Open collection" onAction="#chooseFile"/>
+                <MenuItem mnemonicParsing="false" text="Exit" onAction="#chooseFile"/>
+            </Menu>
 
-                <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About"/>
-                    </items>
-                </Menu>
-            </menus>
+            <Menu mnemonicParsing="false" text="Help">
+                <MenuItem mnemonicParsing="false" text="About"/>
+            </Menu>
         </MenuBar>
     </top>
 
     <left>
+        <VBox fx:id="leftVBox" prefWidth="${rootPane.width*0.17}">
 
+        </VBox>
     </left>
-    <center>
-        <ImageView pickOnBounds="true" preserveRatio="true" fx:id="imageView">
 
-        </ImageView>
+
+    <center>
+
+        <BorderPane>
+            <top>
+                <StackPane fx:id="stackPane" prefHeight="${rootPane.height*0.22}" prefWidth="1015.0">
+                    <Button text="TESTING" onAction="#tests"/>
+                </StackPane>
+            </top>
+
+            <center>
+                <FlowPane fx:id="flowPane">
+
+                </FlowPane>
+            </center>
+        </BorderPane>
+
     </center>
 
 
