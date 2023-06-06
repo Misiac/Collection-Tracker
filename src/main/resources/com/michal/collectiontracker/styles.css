@@ -29,6 +29,7 @@
 }
 #flowPane{
     -fx-background-color:#696969;
+    -fx-text-fill:black;
 }
 
 #collectionNameLabel{
@@ -36,5 +37,16 @@
     -fx-font-size:30;
     -fx-font-weight: bold;
     -fx-text-fill:black;
-
+}
+#collectedNumber{
+    -font-family: 'JetBrains Mono', monospace;
+    -fx-font-size:30;
+    -fx-font-weight: bold;
+    -fx-text-fill:black;
+}
+#collectionGrid{
+    -fx-font-size:15;
+    -fx-font-weight: bold;
+    -fx-text-fill:black;
+    -fx-border-color: black
 }

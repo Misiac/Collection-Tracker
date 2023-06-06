@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.michal.collectiontracker.MainWindowController" fx:id="rootPane">
 
@@ -37,13 +38,11 @@
         <BorderPane>
             <top>
                 <StackPane fx:id="stackPane" prefHeight="${rootPane.height*0.22}"
-                           maxHeight="${rootPane.height*0.22}" prefWidth="1015.0">
+                           maxHeight="${rootPane.height*0.22}" maxWidth="1062.4">
                     <ImageView fx:id="collectionImage">
-                        <image>
-<!--                            <Image url="@test.png" />-->
-                        </image>
                     </ImageView>
-                    <Label fx:id="collectionNameLabel" text="No collection selected" alignment="BOTTOM_LEFT" />
+                    <Label fx:id="collectionNameLabel" text="No collection selected"/>
+                    <Label fx:id="collectedNumber"/>
                 </StackPane>
             </top>
 

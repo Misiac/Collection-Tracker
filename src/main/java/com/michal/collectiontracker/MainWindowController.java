@@ -4,11 +4,10 @@ import com.michal.collectiontracker.datamodel.Collection;
 import com.michal.collectiontracker.datamodel.CollectionItem;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
@@ -28,14 +27,16 @@ public class MainWindowController {
     public BorderPane rootPane;
     public Label collectionNameLabel;
     public ImageView collectionImage;
+    public Label collectedNumber;
     ToggleGroup buttonsGroup = new ToggleGroup();
     private Map<String, Collection> collectionMap = new HashMap<>();
     private String currentCollectionName;
 
     public void initialize() {
-        StackPane.setAlignment(collectionNameLabel, Pos.BOTTOM_LEFT);
 
-        System.out.println(stackPane.getWidth());
+        StackPane.setAlignment(collectionNameLabel, Pos.BOTTOM_LEFT);
+        StackPane.setAlignment(collectedNumber, Pos.BOTTOM_RIGHT);
+
         currentCollectionName = null;
     }
 
@@ -53,7 +54,6 @@ public class MainWindowController {
             if (!collectionMap.containsKey(newCollection.getCollectionName())) {
 
                 collectionMap.put(newCollection.getCollectionName(), newCollection);
-                currentCollectionName = newCollection.getCollectionName();
 
 
                 ToggleButton button = new ToggleButton(newCollection.getCollectionName());
@@ -84,39 +84,61 @@ public class MainWindowController {
     private void handleCollectionChange(ActionEvent actionEvent) {
         String selection = ((ToggleButton) actionEvent.getSource()).getText();
         Collection selectedCollection = collectionMap.get(selection);
-        collectionNameLabel.setText(selectedCollection.getCollectionName());
-        collectionImage.setFitHeight(stackPane.getMaxHeight());
-        collectionImage.setFitWidth(stackPane.getMaxWidth());
-        collectionImage.setImage(selectedCollection.getBackgroundImage());
-        System.out.println("TOTAL " + selectedCollection.getTotalNumberOfItems());
-        System.out.println("OWNED " + selectedCollection.getNumberOfItemsOwned());
 
-        renderCollection(selectedCollection);
+        if (!selectedCollection.getCollectionName().equals(currentCollectionName)) {
+            renderCollection(selectedCollection);
+        }
 
 
     }
 
     public void renderCollection(Collection collection) {
+
         flowPane.getChildren().clear();
+
+        collectionNameLabel.setText(collection.getCollectionName());
+
+        collectionImage.setFitHeight(stackPane.getMaxHeight());
+        collectionImage.setFitWidth(stackPane.getMaxWidth());
+        collectionImage.setImage(collection.getBackgroundImage());
+
+        collectedNumber.setText(collection.getNumberOfItemsOwned() + " out of " +
+                collection.getTotalNumberOfItems() + " Collected");
+
         for (CollectionItem collectionItem : collection.getCollectionItems()) {
             GridPane gridPane = new GridPane();
+            gridPane.setId("collectionGrid");
 
             Label itemName = new Label(collectionItem.getName());
-            Label itemID = new Label(String.valueOf(collectionItem.getId()));
+            Label itemID = new Label("Number: " + String.valueOf(collectionItem.getId()));
+            CheckBox checkBox = new CheckBox();
+
+            if (collectionItem.isOwned()) {
+                checkBox.setSelected(true);
+            }
 
             ImageView imageView = new ImageView(collectionItem.getImage());
-            imageView.setPreserveRatio(true);
-            imageView.setFitHeight(100);
-            imageView.setFitWidth(100);
+            imageView.setFitHeight(150);
+            imageView.setFitWidth(150);
+            checkBox.setPadding(new Insets(5));
+            checkBox.setOnAction(this::handleCheckBoxClick);
 
-            gridPane.setGridLinesVisible(true);
+            gridPane.add(imageView, 0, 0, 2, 1);
+            gridPane.add(itemName, 0, 1, 2, 1);
+            gridPane.add(itemID, 0, 2, 1, 1);
+            gridPane.add(checkBox, 1, 2, 1, 1);
 
-            gridPane.add(imageView, 0, 0, 1, 2);
-            gridPane.add(itemName, 0, 1, 1, 1);
-            gridPane.add(itemID, 2, 0, 1, 1);
+
+            GridPane.setHalignment(itemName, HPos.CENTER);
+            GridPane.setHalignment(checkBox,HPos.RIGHT);
+
 
             flowPane.getChildren().add(gridPane);
         }
+        currentCollectionName = collection.getCollectionName();
+    }
+    private void handleCheckBoxClick(ActionEvent e){
+        System.out.println(e.getSource().toString());
     }
 
     @FXML
