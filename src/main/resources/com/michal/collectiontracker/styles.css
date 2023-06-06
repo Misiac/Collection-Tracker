@@ -3,7 +3,8 @@
     -fx-font-size:15;
     -fx-font-weight: bold;
     -fx-border-width: 0 0 0 0;
-    font-family: 'JetBrains Mono', monospace;
+    -font-family: 'JetBrains Mono', monospace;
+       -fx-text-fill:black;
 }
 .toggle-button:selected{
     -fx-background-color:#D3D3D3;
@@ -28,4 +29,12 @@
 }
 #flowPane{
     -fx-background-color:#696969;
+}
+
+#collectionNameLabel{
+    -font-family: 'JetBrains Mono', monospace;
+    -fx-font-size:30;
+    -fx-font-weight: bold;
+    -fx-text-fill:black;
+
 }

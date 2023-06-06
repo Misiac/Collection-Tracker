@@ -4,6 +4,7 @@ import com.michal.collectiontracker.datamodel.Collection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -13,8 +14,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MainWindowController {
     @FXML
@@ -25,10 +28,17 @@ public class MainWindowController {
     public FlowPane flowPane;
     @FXML
     public BorderPane rootPane;
+    public Label collectionNameLabel;
     List<Collection> collections = new LinkedList<>();
     ToggleGroup buttonsGroup = new ToggleGroup();
+    private Map<String, ToggleButton> buttonMap = new HashMap<>();
+    private int currentCollectionID;
 
     public static final String CLICKED_COLOR = "-fx-background-color:#8C8C8C;";
+
+    public void initialize() {
+        StackPane.setAlignment(collectionNameLabel, Pos.BOTTOM_LEFT);
+    }
 
     @FXML
     public void chooseFile() {
@@ -58,6 +68,7 @@ public class MainWindowController {
 
                 button.setOnAction(this::handleCollectionChange);
                 leftVBox.getChildren().add(button);
+                buttonMap.put(newCollection.getCollectionName(), button);
 
 
             } catch (Exception e) {
@@ -70,8 +81,7 @@ public class MainWindowController {
     }
 
     private void handleCollectionChange(ActionEvent actionEvent) {
-
-
+        actionEvent.get
     }
 
     @FXML
