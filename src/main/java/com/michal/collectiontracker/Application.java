@@ -8,9 +8,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class Application extends javafx.application.Application {
+    FXMLLoader fxmlLoader;
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("mainwindow-view.fxml"));
+         fxmlLoader = new FXMLLoader(Application.class.getResource("mainwindow-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
 
@@ -31,6 +32,7 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void stop() throws Exception {
+        ((MainWindowController)fxmlLoader.getController()).close();
         super.stop();
     }
 }

@@ -5,6 +5,7 @@ import com.michal.collectiontracker.datamodel.CollectionItem;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,8 +15,10 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class MainWindowController {
     @FXML
@@ -49,8 +52,7 @@ public class MainWindowController {
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("CT save files", "*.sav"));
         File file = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
-
-
+        if (file == null) return;
         try {
             Collection newCollection = new Collection(file);
             if (!collectionMap.containsKey(newCollection.getCollectionName())) {
@@ -173,5 +175,23 @@ public class MainWindowController {
 
         }
         Platform.exit();
+    }
+
+    @FXML
+    public void showAboutDialog() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.initOwner(rootPane.getScene().getWindow());
+        dialog.setTitle("About");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("aboutDialog.fxml"));
+
+        try {
+            dialog.getDialogPane().setContent(fxmlLoader.load());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        Optional<ButtonType> result = dialog.showAndWait();
+
     }
 }

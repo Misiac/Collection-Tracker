@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<DialogPane xmlns:fx="http://javafx.com/fxml" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity"
+            prefHeight="300.0" prefWidth="480.0">
+    <header>
+        <GridPane>
+            <HBox GridPane.rowIndex="0" GridPane.columnIndex="0">
+                <ImageView>
+                    <Image url="@ctlogoaboutres.png"/>
+                </ImageView>
+                <Label text="Collection Tracker 2023"/>
+            </HBox>
+
+            <Label GridPane.rowIndex="1" GridPane.columnIndex="0" wrapText="true"
+                   style=" -fx-font-size: 15px; -fx-padding: 20 20 20 20;"
+                   text="Collection tracker is just an easy app, that allows you to track and share your collections. It was made with having fun during creation process in mind, so do not take it too serious :)"/>
+            <Label GridPane.rowIndex="2" GridPane.columnIndex="0" text="coded by Michał Siwiec"/>
+        </GridPane>
+
+    </header>
+    <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="320.0">
+            <children>
+
+            </children>
+        </AnchorPane>
+    </content>
+</DialogPane>
