@@ -2,6 +2,7 @@ package com.michal.collectiontracker;
 
 import com.michal.collectiontracker.datamodel.Collection;
 import com.michal.collectiontracker.datamodel.CollectionItem;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -30,6 +31,7 @@ public class MainWindowController {
     public Label collectedNumber;
     ToggleGroup buttonsGroup = new ToggleGroup();
     private Map<String, Collection> collectionMap = new HashMap<>();
+    private Map<CheckBox, Integer> checkBoxMap = new HashMap<>();
     private String currentCollectionName;
 
     public void initialize() {
@@ -95,6 +97,7 @@ public class MainWindowController {
     public void renderCollection(Collection collection) {
 
         flowPane.getChildren().clear();
+        checkBoxMap.clear();
 
         collectionNameLabel.setText(collection.getCollectionName());
 
@@ -112,14 +115,15 @@ public class MainWindowController {
             Label itemName = new Label(collectionItem.getName());
             Label itemID = new Label("Number: " + String.valueOf(collectionItem.getId()));
             CheckBox checkBox = new CheckBox();
+            checkBoxMap.put(checkBox, collectionItem.getId());
 
             if (collectionItem.isOwned()) {
                 checkBox.setSelected(true);
             }
 
             ImageView imageView = new ImageView(collectionItem.getImage());
-            imageView.setFitHeight(150);
-            imageView.setFitWidth(150);
+            imageView.setFitHeight(129);
+            imageView.setFitWidth(129);
             checkBox.setPadding(new Insets(5));
             checkBox.setOnAction(this::handleCheckBoxClick);
 
@@ -130,19 +134,38 @@ public class MainWindowController {
 
 
             GridPane.setHalignment(itemName, HPos.CENTER);
-            GridPane.setHalignment(checkBox,HPos.RIGHT);
+            GridPane.setHalignment(checkBox, HPos.RIGHT);
 
 
             flowPane.getChildren().add(gridPane);
         }
         currentCollectionName = collection.getCollectionName();
     }
-    private void handleCheckBoxClick(ActionEvent e){
-        System.out.println(e.getSource().toString());
+
+    private void handleCheckBoxClick(ActionEvent e) {
+        int selectedItemID = checkBoxMap.get((CheckBox) e.getSource());
+        boolean currentCheckBoxStatus = ((CheckBox) e.getSource()).isSelected();
+
+        Collection currentCollection = collectionMap.get(currentCollectionName);
+        if (currentCollection.getThisDatasource().updateItemInfo(selectedItemID, currentCheckBoxStatus)){
+
+        }
+
+
     }
 
     @FXML
     public void tests() {
 
+    }
+
+    @FXML
+    public void close() {
+
+        for (Map.Entry<String, Collection> entry : collectionMap.entrySet()) {
+            entry.getValue().getThisDatasource().close();
+
+        }
+        Platform.exit();
     }
 }

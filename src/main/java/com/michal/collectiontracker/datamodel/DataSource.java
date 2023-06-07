@@ -15,6 +15,7 @@ public class DataSource {
     private Connection connection;
     private PreparedStatement queryItems;
     private PreparedStatement queryInfo;
+    private PreparedStatement updateItemStatus;
 
     //    private String storeStatement = "INSERT INTO Items VALUES(1,'testName',?)";
 //    private PreparedStatement store;
@@ -29,6 +30,7 @@ public class DataSource {
 
             queryItems = connection.prepareStatement("SELECT * FROM Items");
             queryInfo = connection.prepareStatement("SELECT * FROM Info");
+            updateItemStatus = connection.prepareStatement("UPDATE Items SET isOwned = ? WHERE ID = ?");
 
         } catch (Exception e) {
             System.out.println("Data source error: " + e.getMessage());
@@ -55,9 +57,28 @@ public class DataSource {
         } catch (SQLException e) {
             System.out.println("Error Executing infoquery");
             return null;
-        }finally {
+        } finally {
 
         }
+    }
+
+    public boolean updateItemInfo(int selectedItemID, boolean currentCheckBoxStatus) {
+
+        try {
+            if (currentCheckBoxStatus) {
+                updateItemStatus.setInt(1, 1);
+            } else {
+                updateItemStatus.setInt(1, 0);
+            }
+            updateItemStatus.setInt(2, selectedItemID);
+            updateItemStatus.execute();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+
     }
 
     private static byte[] covertFileToByteArray(File file) {
@@ -83,6 +104,9 @@ public class DataSource {
             if (queryInfo != null) {
                 queryInfo.close();
             }
+            if (updateItemStatus != null) {
+                updateItemStatus.close();
+            }
 
             if (connection != null) {
                 connection.close();
@@ -92,6 +116,7 @@ public class DataSource {
             System.out.println("Couldn't close the db " + e.getMessage());
         }
     }
+
 
 //    public Image storeFile(File file) throws IOException, SQLException {
 //
