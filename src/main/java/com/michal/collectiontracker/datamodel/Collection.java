@@ -8,12 +8,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Collection {
 
-    private List<CollectionItem> collectionItems = new LinkedList<>();
+    private Map<Integer, CollectionItem> collectionItems = new HashMap<>();
     private DataSource thisDatasource;
     private File file;
     private String collectionName;
@@ -31,6 +31,15 @@ public class Collection {
 
     public DataSource getThisDatasource() {
         return thisDatasource;
+    }
+
+
+    public void updateOwnedStatus(boolean checkBoxStatus) {
+        if (checkBoxStatus) {
+            numberOfItemsOwned++;
+        } else {
+            numberOfItemsOwned--;
+        }
     }
 
     public Collection(File collectionFile) throws SQLException, IOException {
@@ -56,7 +65,7 @@ public class Collection {
 
             InputStream inputStream = items.getBinaryStream(3);
             newItem.setImage(new Image(inputStream));
-            collectionItems.add(newItem);
+            collectionItems.put(newItem.getId(), newItem);
 
         }
         ResultSet collectionInfo = thisDatasource.queryCollectionInfo();
@@ -74,7 +83,7 @@ public class Collection {
         return file;
     }
 
-    public List<CollectionItem> getCollectionItems() {
+    public Map<Integer, CollectionItem> getCollectionItems() {
         return collectionItems;
     }
 

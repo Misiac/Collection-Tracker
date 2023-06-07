@@ -105,10 +105,9 @@ public class MainWindowController {
         collectionImage.setFitWidth(stackPane.getMaxWidth());
         collectionImage.setImage(collection.getBackgroundImage());
 
-        collectedNumber.setText(collection.getNumberOfItemsOwned() + " out of " +
-                collection.getTotalNumberOfItems() + " Collected");
+        calculateCollectedNumber(collection);
 
-        for (CollectionItem collectionItem : collection.getCollectionItems()) {
+        for (CollectionItem collectionItem : collection.getCollectionItems().values()) {
             GridPane gridPane = new GridPane();
             gridPane.setId("collectionGrid");
 
@@ -147,11 +146,18 @@ public class MainWindowController {
         boolean currentCheckBoxStatus = ((CheckBox) e.getSource()).isSelected();
 
         Collection currentCollection = collectionMap.get(currentCollectionName);
-        if (currentCollection.getThisDatasource().updateItemInfo(selectedItemID, currentCheckBoxStatus)){
-
+        if (currentCollection.getThisDatasource().updateItemInfo(selectedItemID, currentCheckBoxStatus)) {
+            currentCollection.getCollectionItems().get(selectedItemID).setOwned(currentCheckBoxStatus);
+            currentCollection.updateOwnedStatus(currentCheckBoxStatus);
+            calculateCollectedNumber(currentCollection);
         }
 
 
+    }
+
+    private void calculateCollectedNumber(Collection collection) {
+        collectedNumber.setText(collection.getNumberOfItemsOwned() + " out of " +
+                collection.getTotalNumberOfItems() + " Collected");
     }
 
     @FXML
