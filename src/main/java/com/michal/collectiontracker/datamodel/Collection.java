@@ -1,6 +1,7 @@
 package com.michal.collectiontracker.datamodel;
 
 
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 
 import java.io.File;
@@ -73,6 +74,16 @@ public class Collection {
         if (collectionInfo.getBinaryStream(2) != null) {
             this.backgroundImage = new Image(collectionInfo.getBinaryStream(2));
         }
+    }
+
+    public Collection(TextField name, File directory, File img) {
+        thisDatasource = new DataSource(name, directory, img);
+        this.file = new File(directory.getAbsolutePath() + "/" + name.getText() + ".sav");
+        this.collectionName = name.getText();
+        this.backgroundImage = new Image(file.getAbsolutePath());
+        numberOfItemsOwned = 0;
+        totalNumberOfItems = 0;
+
     }
 
     public void loadCollectionFromFile(File collection) {

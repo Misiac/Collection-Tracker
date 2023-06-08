@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.michal.collectiontracker.CreationDialogController" maxHeight="-Infinity"
+            maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity"
+            prefHeight="300.0" prefWidth="480.0"
+fx:id="rootCreationDialog">
+
+    <content>
+        <GridPane fx:id="creationGrid" vgap="40" hgap="40">
+
+            <Label text="Step 1: Enter name" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="newName" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="Step 2: Select creation path" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <Button text="Choose directory" GridPane.rowIndex="1" GridPane.columnIndex="1" onAction="#chooseDirectory"/>
+
+            <Label text="Step 3: Select background image &#xA;(Images will be automatically resized)"
+                   GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <Button text="Choose image" GridPane.rowIndex="2" GridPane.columnIndex="1" onAction="#chooseImg"/>
+
+        </GridPane>
+    </content>
+
+</DialogPane>

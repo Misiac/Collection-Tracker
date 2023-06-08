@@ -12,7 +12,7 @@
         <GridPane>
             <HBox GridPane.rowIndex="0" GridPane.columnIndex="0">
                 <ImageView>
-                    <Image url="@ctlogoaboutres.png"/>
+                    <Image url="@../img/ctlogoaboutres.png"/>
                 </ImageView>
                 <Label text="Collection Tracker 2023"/>
             </HBox>

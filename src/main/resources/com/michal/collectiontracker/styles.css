@@ -1,4 +1,4 @@
-.toggle-button {
+.toggle-button, #creationButton {
     -fx-background-color:#A9A9A9;
     -fx-font-size:15;
     -fx-font-weight: bold;
@@ -9,16 +9,12 @@
 .toggle-button:selected{
     -fx-background-color:#D3D3D3;
 }
-.toggle-button:hover{
+.toggle-button:hover, #creationButton:hover{
     -fx-background-color:#C0C0C0;
 
 }
 .toggle-button:hover:selected{
     -fx-background-color:#DCDCDC;
-}
-#rootPane{
-}
-#leftVBox{
 }
 #gridPane{
     -fx-background-color:#A9A9A9;
@@ -27,26 +23,23 @@
 
     -fx-background-color:#808080;
 }
-#flowPane{
+#flowPane, #scrollPane{
     -fx-background-color:#696969;
     -fx-text-fill:black;
-}
 
-#collectionNameLabel{
-    -font-family: 'JetBrains Mono', monospace;
-    -fx-font-size:30;
-    -fx-font-weight: bold;
-    -fx-text-fill:black;
 }
-#collectedNumber{
-    -font-family: 'JetBrains Mono', monospace;
-    -fx-font-size:30;
-    -fx-font-weight: bold;
-    -fx-text-fill:black;
-}
-#collectionGrid{
+#flowPane .collectionGrid{
     -fx-font-size:15;
     -fx-font-weight: bold;
     -fx-text-fill:black;
     -fx-border-color: black
+
 }
+
+#collectionNameLabel, #collectedNumber, #addButton{
+    -font-family: 'JetBrains Mono', monospace;
+    -fx-font-size:30;
+    -fx-font-weight: bold;
+    -fx-text-fill:black;
+}
+

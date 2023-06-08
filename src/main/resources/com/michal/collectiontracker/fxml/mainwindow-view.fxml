@@ -8,13 +8,13 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.michal.collectiontracker.MainWindowController" fx:id="rootPane">
 
-
     <top>
         <MenuBar>
             <Menu mnemonicParsing="false" text="File">
                 <MenuItem mnemonicParsing="false" text="Open collection" onAction="#chooseFile"/>
+                <CheckMenuItem text="Enable creation mode" onAction="#handleCreationModeSwitch"/>
                 <MenuItem mnemonicParsing="false" text="Exit" onAction="#close"/>
-                <MenuItem mnemonicParsing="false" text="TEST" onAction="#tests"/>
+
             </Menu>
 
             <Menu mnemonicParsing="false" text="Help">
@@ -29,9 +29,21 @@
                   GridPane.columnIndex="0" GridPane.rowIndex="0">
 
             </VBox>
+            <VBox fx:id="creationVBox" prefWidth="${rootPane.width*0.18}"
+                  GridPane.columnIndex="0" GridPane.rowIndex="1">
+
+                <Button alignment="BOTTOM_CENTER" maxWidth="Infinity" prefHeight="50" wrapText="true"
+                        fx:id="creationButton" onAction="#showCreationDialog">
+                    <graphic>
+                        <ImageView>
+                            <Image url="@../img/plus.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </VBox>
+
         </GridPane>
     </left>
-
 
     <center>
 
@@ -43,17 +55,22 @@
                     </ImageView>
                     <Label fx:id="collectionNameLabel" text="No collection selected"/>
                     <Label fx:id="collectedNumber"/>
+
                 </StackPane>
             </top>
 
             <center>
-                <FlowPane fx:id="flowPane">
+                <ScrollPane fx:id="scrollPane" style="-fx-background-color:#696969;">
 
-                </FlowPane>
+                    <FlowPane fx:id="flowPane" prefHeight="Infinity" prefWidth="Infinity">
+
+                    </FlowPane>
+
+                </ScrollPane>
             </center>
+
         </BorderPane>
 
     </center>
-
 
 </BorderPane>

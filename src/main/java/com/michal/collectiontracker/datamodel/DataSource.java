@@ -1,6 +1,8 @@
 
 package com.michal.collectiontracker.datamodel;
 
+import javafx.scene.control.TextField;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,8 +18,8 @@ public class DataSource {
     private PreparedStatement queryItems;
     private PreparedStatement queryInfo;
     private PreparedStatement updateItemStatus;
-
-    //    private String storeStatement = "INSERT INTO Items VALUES(1,'testName',?)";
+    private PreparedStatement insertIntoItemsCreation;
+    private final String insertIntoItemsCreationStatement = "INSERT INTO Info VALUES(?,?)";
 //    private PreparedStatement store;
 
 
@@ -36,6 +38,39 @@ public class DataSource {
             System.out.println("Data source error: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public DataSource(TextField name, File directory, File img) {
+//        this(directory.getAbsolutePath() +"/"+name.getText()+"+.sav");
+        this.CONNECTION_STRING = CONNECTION_STRING_START + directory.getAbsolutePath() + "/" + name.getText() + ".sav";
+        try {
+            connection = DriverManager.getConnection(CONNECTION_STRING);
+
+        } catch (SQLException e) {
+            System.out.println("Data creation error + " + e.getMessage());
+        }
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("CREATE TABLE \"Items\" (\n" +
+                    "\t\"ID\"\tInt NOT NULL,\n" +
+                    "\t\"NAME\"\tTEXT NOT NULL,\n" +
+                    "\t\"PHOTO\"\tBLOB,\n" +
+                    "\t\"isOwned\"\tINTEGER NOT NULL,\n" +
+                    "\tPRIMARY KEY(\"ID\")\n" +
+                    ")");
+            statement.execute("CREATE TABLE \"Info\" (\n" +
+                    "\t\"COLLECTIONNAME\"\tTEXT NOT NULL\n" +
+                    ", \"COLLECTIONBG\"\tBLOB)");
+
+            insertIntoItemsCreation = connection.prepareStatement(insertIntoItemsCreationStatement);
+            insertIntoItemsCreation.setString(1, name.getText());
+            insertIntoItemsCreation.setBytes(2, covertFileToByteArray(img));
+            insertIntoItemsCreation.execute();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     public ResultSet queryItems() {
@@ -107,6 +142,9 @@ public class DataSource {
             if (updateItemStatus != null) {
                 updateItemStatus.close();
             }
+            if (insertIntoItemsCreation != null) {
+                insertIntoItemsCreation.close();
+            }
 
             if (connection != null) {
                 connection.close();
@@ -116,14 +154,6 @@ public class DataSource {
             System.out.println("Couldn't close the db " + e.getMessage());
         }
     }
-
-
-//    public Image storeFile(File file) throws IOException, SQLException {
-//
-//        store.setBytes(1, covertFileToByteArray(file));
-//        store.execute();
-//        return new Image(new FileInputStream(file));
-//    }
 
 
 }

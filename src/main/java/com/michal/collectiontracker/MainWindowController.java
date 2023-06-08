@@ -10,6 +10,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 public class MainWindowController {
@@ -29,20 +31,45 @@ public class MainWindowController {
     public FlowPane flowPane;
     @FXML
     public BorderPane rootPane;
+    @FXML
     public Label collectionNameLabel;
+    @FXML
     public ImageView collectionImage;
+    @FXML
     public Label collectedNumber;
-    ToggleGroup buttonsGroup = new ToggleGroup();
+    @FXML
+    public Button creationButton;
+    @FXML
+    public ScrollPane scrollPane;
+    Button addButton;
+    ToggleGroup buttonsGroup;
     private Map<String, Collection> collectionMap = new HashMap<>();
     private Map<CheckBox, Integer> checkBoxMap = new HashMap<>();
     private String currentCollectionName;
+    boolean isCreationModeEnabled;
+
 
     public void initialize() {
+        buttonsGroup = new ToggleGroup();
+        currentCollectionName = null;
+        isCreationModeEnabled = false;
+
+        scrollPane.fitToHeightProperty().set(true);
+        scrollPane.fitToWidthProperty().set(true);
+
+        addButton = new Button("Add item");
+        addButton.setGraphic(new ImageView(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("img/plus.png")))));
+        addButton.setOnAction(this::showAddItemDialog);
+
 
         StackPane.setAlignment(collectionNameLabel, Pos.BOTTOM_LEFT);
         StackPane.setAlignment(collectedNumber, Pos.BOTTOM_RIGHT);
 
-        currentCollectionName = null;
+        creationButton.setVisible(false);
+        addButton.setVisible(false);
+
+
     }
 
     @FXML
@@ -54,29 +81,9 @@ public class MainWindowController {
         File file = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
         if (file == null) return;
         try {
+
             Collection newCollection = new Collection(file);
-            if (!collectionMap.containsKey(newCollection.getCollectionName())) {
-
-                collectionMap.put(newCollection.getCollectionName(), newCollection);
-
-
-                ToggleButton button = new ToggleButton(newCollection.getCollectionName());
-                button.setAlignment(Pos.BOTTOM_LEFT);
-                button.setMaxWidth(Double.MAX_VALUE);
-                button.setPrefHeight(50);
-                button.setWrapText(true);
-                button.setToggleGroup(buttonsGroup);
-
-                button.setOnAction(this::handleCollectionChange);
-                leftVBox.getChildren().add(button);
-            } else {
-                Alert alreadyPresentAlert = new Alert(Alert.AlertType.WARNING);
-                alreadyPresentAlert.setTitle("Already loaded");
-                alreadyPresentAlert.setHeaderText("Selected collection is already loaded");
-                alreadyPresentAlert.setContentText("Choose another file");
-                alreadyPresentAlert.showAndWait();
-            }
-
+            loadCollection(newCollection);
 
         } catch (Exception e) {
             System.out.println("File not loaded properly");
@@ -111,10 +118,10 @@ public class MainWindowController {
 
         for (CollectionItem collectionItem : collection.getCollectionItems().values()) {
             GridPane gridPane = new GridPane();
-            gridPane.setId("collectionGrid");
+            gridPane.getStyleClass().add("collectionGrid");
 
             Label itemName = new Label(collectionItem.getName());
-            Label itemID = new Label("Number: " + String.valueOf(collectionItem.getId()));
+            Label itemID = new Label("Number: " + collectionItem.getId());
             CheckBox checkBox = new CheckBox();
             checkBoxMap.put(checkBox, collectionItem.getId());
 
@@ -140,6 +147,12 @@ public class MainWindowController {
 
             flowPane.getChildren().add(gridPane);
         }
+
+
+        flowPane.getChildren().add(addButton);
+        if (isCreationModeEnabled) {
+            addButton.setVisible(true);
+        }
         currentCollectionName = collection.getCollectionName();
     }
 
@@ -163,11 +176,6 @@ public class MainWindowController {
     }
 
     @FXML
-    public void tests() {
-
-    }
-
-    @FXML
     public void close() {
 
         for (Map.Entry<String, Collection> entry : collectionMap.entrySet()) {
@@ -179,19 +187,101 @@ public class MainWindowController {
 
     @FXML
     public void showAboutDialog() {
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.initOwner(rootPane.getScene().getWindow());
-        dialog.setTitle("About");
+        Dialog<ButtonType> aboutDialog = new Dialog<>();
+        aboutDialog.initOwner(rootPane.getScene().getWindow());
+        aboutDialog.setTitle("About");
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("aboutDialog.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("fxml/aboutdialog.fxml"));
 
         try {
-            dialog.getDialogPane().setContent(fxmlLoader.load());
+            aboutDialog.getDialogPane().setContent(fxmlLoader.load());
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-        Optional<ButtonType> result = dialog.showAndWait();
+        aboutDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        Optional<ButtonType> result = aboutDialog.showAndWait();
 
+    }
+
+    private void showAddItemDialog(ActionEvent e) {
+    }
+
+    @FXML
+    public void handleCreationModeSwitch() {
+        isCreationModeEnabled ^= true;
+        creationButton.setVisible(isCreationModeEnabled);
+        if (currentCollectionName != null) {
+            addButton.setVisible(isCreationModeEnabled);
+        }
+
+    }
+
+    @FXML
+    public void showCreationDialog() {
+        Dialog<ButtonType> creationDialog = new Dialog<>();
+        creationDialog.initOwner(rootPane.getScene().getWindow());
+        creationDialog.setTitle("Create new collection");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("fxml/creationdialog.fxml"));
+
+        try {
+            creationDialog.getDialogPane().setContent(fxmlLoader.load());
+        } catch (IOException e) {
+            System.out.println("Error loading creation dialog");
+        }
+        CreationDialogController controller = fxmlLoader.getController();
+        creationDialog.getDialogPane().getButtonTypes().add(new ButtonType("Create", ButtonType.OK.getButtonData()));
+
+        creationDialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+        Optional<ButtonType> result;
+
+        do {
+            result = creationDialog.showAndWait();
+
+            if (result.get().getButtonData().isCancelButton()) return;
+        } while (!controller.isEverythingSet());
+
+
+        createNewCollection(
+                controller.getNewName(),
+                controller.getChoosenDirectory(),
+                controller.getChoosenImg()
+        );
+
+
+    }
+
+    private void createNewCollection(TextField newName, File choosenDirectory, File choosenImg) {
+        Collection newCollection = new Collection(newName, choosenDirectory, choosenImg);
+        loadCollection(newCollection);
+
+    }
+
+    private void loadCollection(Collection collection) {
+        try {
+            if (!collectionMap.containsKey(collection.getCollectionName())) {
+
+                collectionMap.put(collection.getCollectionName(), collection);
+
+
+                ToggleButton button = new ToggleButton(collection.getCollectionName());
+                button.setAlignment(Pos.BOTTOM_LEFT);
+                button.setMaxWidth(Double.MAX_VALUE);
+                button.setPrefHeight(50);
+                button.setWrapText(true);
+                button.setToggleGroup(buttonsGroup);
+
+                button.setOnAction(this::handleCollectionChange);
+                leftVBox.getChildren().add(button);
+            } else {
+                Alert alreadyPresentAlert = new Alert(Alert.AlertType.WARNING);
+                alreadyPresentAlert.setTitle("Already loaded");
+                alreadyPresentAlert.setHeaderText("Selected collection is already loaded");
+                alreadyPresentAlert.setContentText("Choose another file");
+                alreadyPresentAlert.showAndWait();
+            }
+        } catch (Exception e) {
+
+        }
     }
 }
