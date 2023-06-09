@@ -19,8 +19,9 @@ public class DataSource {
     private PreparedStatement queryInfo;
     private PreparedStatement updateItemStatus;
     private PreparedStatement insertIntoItemsCreation;
+    private PreparedStatement insertNewItem;
     private final String insertIntoItemsCreationStatement = "INSERT INTO Info VALUES(?,?)";
-//    private PreparedStatement store;
+    private final String insertNewItemsStatement = "INSERT INTO Items VALUES (?, ?, ?,0)";
 
 
     public DataSource(String absolutePath) {
@@ -145,7 +146,9 @@ public class DataSource {
             if (insertIntoItemsCreation != null) {
                 insertIntoItemsCreation.close();
             }
-
+            if (insertNewItem != null) {
+                insertNewItem.close();
+            }
             if (connection != null) {
                 connection.close();
             }
@@ -156,4 +159,21 @@ public class DataSource {
     }
 
 
+    public void addNewItemToDB(TextField newName, TextField newNumber, File imgFile) {
+        if (insertNewItem == null) {
+            try {
+                insertNewItem = connection.prepareStatement(insertNewItemsStatement);
+
+                insertNewItem.setInt(1, Integer.parseInt(newNumber.getText()));
+                insertNewItem.setString(2, newName.getText());
+                insertNewItem.setBytes(3, covertFileToByteArray(imgFile));
+
+                insertNewItem.execute();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+
+    }
 }

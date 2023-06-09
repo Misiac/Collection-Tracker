@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -80,7 +81,11 @@ public class Collection {
         thisDatasource = new DataSource(name, directory, img);
         this.file = new File(directory.getAbsolutePath() + "/" + name.getText() + ".sav");
         this.collectionName = name.getText();
-        this.backgroundImage = new Image(file.getAbsolutePath());
+        try {
+            this.backgroundImage = new Image(img.toURI().toURL().toExternalForm());
+        } catch (MalformedURLException e) {
+            System.out.println("path erorr");
+        }
         numberOfItemsOwned = 0;
         totalNumberOfItems = 0;
 
@@ -90,9 +95,6 @@ public class Collection {
 
     }
 
-    public File getFile() {
-        return file;
-    }
 
     public Map<Integer, CollectionItem> getCollectionItems() {
         return collectionItems;
@@ -104,6 +106,23 @@ public class Collection {
 
     public int getNumberOfItemsOwned() {
         return numberOfItemsOwned;
+    }
+
+    public void addItem(TextField newName, TextField newNumber, File imgFile) {
+
+        thisDatasource.addNewItemToDB(newName, newNumber, imgFile);
+
+        int number = Integer.parseInt(newNumber.getText());
+        CollectionItem newCollectionItem = null;
+        try {
+            newCollectionItem = new CollectionItem(number, newName.getText(), new Image(imgFile.toURI().toURL().toExternalForm()), false);
+        } catch (MalformedURLException e) {
+            System.out.println("url error");
+        }
+        collectionItems.put(number, newCollectionItem);
+        totalNumberOfItems++;
+
+
     }
 }
 

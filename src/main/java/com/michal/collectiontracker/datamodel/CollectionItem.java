@@ -13,6 +13,13 @@ public class CollectionItem {
     public CollectionItem() {
     }
 
+    public CollectionItem(int id, String name, Image image, boolean isOwned) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.isOwned = isOwned;
+    }
+
     public void setId(int id) {
         this.id = id;
     }

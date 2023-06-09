@@ -6,14 +6,16 @@
     -font-family: 'JetBrains Mono', monospace;
        -fx-text-fill:black;
 }
-.toggle-button:selected{
+.toggle-button:selected, #addButton:selected{
     -fx-background-color:#D3D3D3;
 }
-.toggle-button:hover, #creationButton:hover{
+.toggle-button:hover, #creationButton:hover,
+#addButton:hover{
     -fx-background-color:#C0C0C0;
 
 }
-.toggle-button:hover:selected{
+.toggle-button:hover:selected,
+#addButton:hover:selected{
     -fx-background-color:#DCDCDC;
 }
 #gridPane{
@@ -42,4 +44,10 @@
     -fx-font-weight: bold;
     -fx-text-fill:black;
 }
+#addButton{
+-fx-font-size:12;
+-font-family: 'JetBrains Mono', monospace;
+-fx-background-color:#A9A9A9;
+}
+
 

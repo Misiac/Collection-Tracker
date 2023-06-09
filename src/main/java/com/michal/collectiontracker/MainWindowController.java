@@ -58,6 +58,8 @@ public class MainWindowController {
         scrollPane.fitToWidthProperty().set(true);
 
         addButton = new Button("Add item");
+        addButton.setId("addButton");
+        FlowPane.setMargin(addButton, new Insets(20, 0, 0, 10));
         addButton.setGraphic(new ImageView(
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream("img/plus.png")))));
         addButton.setOnAction(this::showAddItemDialog);
@@ -203,8 +205,6 @@ public class MainWindowController {
 
     }
 
-    private void showAddItemDialog(ActionEvent e) {
-    }
 
     @FXML
     public void handleCreationModeSwitch() {
@@ -247,6 +247,40 @@ public class MainWindowController {
                 controller.getChoosenDirectory(),
                 controller.getChoosenImg()
         );
+
+
+    }
+
+    private void showAddItemDialog(ActionEvent e) {
+        Dialog<ButtonType> addItemDialog = new Dialog<>();
+        addItemDialog.initOwner(rootPane.getScene().getWindow());
+        addItemDialog.setTitle("Add new item");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("fxml/additemdialog.fxml"));
+
+        try {
+            addItemDialog.getDialogPane().setContent(fxmlLoader.load());
+        } catch (IOException ex) {
+            System.out.println("Error loading creation dialog");
+        }
+        AddItemDialogController controller = fxmlLoader.getController();
+        addItemDialog.getDialogPane().getButtonTypes().add(new ButtonType("Add", ButtonType.OK.getButtonData()));
+
+        addItemDialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+        Optional<ButtonType> result;
+
+        do {
+            result = addItemDialog.showAndWait();
+
+            if (result.get().getButtonData().isCancelButton()) return;
+        } while (!controller.isInputOkay());
+
+        Collection currentCollection = collectionMap.get(currentCollectionName);
+        currentCollection.addItem(
+                controller.getNewName(),
+                controller.getNewNumber(),
+                controller.getImgFile());
+        renderCollection(currentCollection);
 
 
     }
