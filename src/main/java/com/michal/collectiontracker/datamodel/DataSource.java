@@ -26,7 +26,6 @@ public class DataSource {
 
     public DataSource(String absolutePath) {
         this.CONNECTION_STRING = CONNECTION_STRING_START + absolutePath;
-        System.out.println(":)");
         try {
 
             connection = DriverManager.getConnection(CONNECTION_STRING);
@@ -57,7 +56,6 @@ public class DataSource {
     }
 
     public DataSource(TextField name, File directory, File img) {
-//        this(directory.getAbsolutePath() +"/"+name.getText()+"+.sav");
         this.CONNECTION_STRING = CONNECTION_STRING_START + directory.getAbsolutePath() + "/" + name.getText() + ".sav";
         try {
             connection = DriverManager.getConnection(CONNECTION_STRING);

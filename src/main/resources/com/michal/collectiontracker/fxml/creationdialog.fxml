@@ -21,6 +21,8 @@ fx:id="rootCreationDialog">
             <Label text="Step 3: Select background image &#xA;(Images will be automatically resized)"
                    GridPane.rowIndex="2" GridPane.columnIndex="0"/>
             <Button text="Choose image" GridPane.rowIndex="2" GridPane.columnIndex="1" onAction="#chooseImg"/>
+            <Label text="Can't create collection in Windows root directory" fx:id="infoLabel" GridPane.columnSpan="2"
+                   GridPane.rowIndex="3" GridPane.columnIndex="0" visible="false"/>
 
         </GridPane>
     </content>

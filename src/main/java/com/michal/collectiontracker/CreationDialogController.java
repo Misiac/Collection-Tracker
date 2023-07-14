@@ -3,6 +3,7 @@ package com.michal.collectiontracker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
@@ -17,8 +18,11 @@ public class CreationDialogController {
     public TextField newName;
     @FXML
     public DialogPane rootCreationDialog;
+    @FXML
+    public Label infoLabel;
     public File choosenDirectory;
     public File choosenImg;
+
 
     public void initialize() {
         choosenDirectory = null;
@@ -42,10 +46,16 @@ public class CreationDialogController {
     }
 
     public boolean isEverythingSet() {
-        if (choosenImg != null && choosenDirectory != null) {
-            return true;
+
+        if (choosenDirectory == null || choosenImg == null) {
+            return false;
         }
-        return false;
+
+        if (choosenDirectory.getAbsolutePath().equals("C:\\")) {
+            infoLabel.setVisible(true);
+            return false;
+        }
+        return (getNewName() != null);
     }
 
     public TextField getNewName() {
