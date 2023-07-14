@@ -34,6 +34,7 @@ public class DataSource {
             queryItems = connection.prepareStatement("SELECT * FROM Items");
             queryInfo = connection.prepareStatement("SELECT * FROM Info");
             updateItemStatus = connection.prepareStatement("UPDATE Items SET isOwned = ? WHERE ID = ?");
+            insertNewItem = connection.prepareStatement(insertNewItemsStatement);
 
         } catch (Exception e) {
             System.out.println("Data source error: " + e.getMessage());
@@ -160,9 +161,9 @@ public class DataSource {
 
 
     public void addNewItemToDB(TextField newName, TextField newNumber, File imgFile) {
-        if (insertNewItem == null) {
+
+        if (insertNewItem != null) {
             try {
-                insertNewItem = connection.prepareStatement(insertNewItemsStatement);
 
                 insertNewItem.setInt(1, Integer.parseInt(newNumber.getText()));
                 insertNewItem.setString(2, newName.getText());
