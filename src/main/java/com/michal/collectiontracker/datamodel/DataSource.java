@@ -26,20 +26,34 @@ public class DataSource {
 
     public DataSource(String absolutePath) {
         this.CONNECTION_STRING = CONNECTION_STRING_START + absolutePath;
-
+        System.out.println(":)");
         try {
 
             connection = DriverManager.getConnection(CONNECTION_STRING);
 
-            queryItems = connection.prepareStatement("SELECT * FROM Items");
-            queryInfo = connection.prepareStatement("SELECT * FROM Info");
-            updateItemStatus = connection.prepareStatement("UPDATE Items SET isOwned = ? WHERE ID = ?");
-            insertNewItem = connection.prepareStatement(insertNewItemsStatement);
+            if (!prepareStatements()) {
+                throw new SQLException();
+            }
+
 
         } catch (Exception e) {
             System.out.println("Data source error: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public boolean prepareStatements() {
+        try {
+            queryItems = connection.prepareStatement("SELECT * FROM Items");
+            queryInfo = connection.prepareStatement("SELECT * FROM Info");
+            updateItemStatus = connection.prepareStatement("UPDATE Items SET isOwned = ? WHERE ID = ?");
+            insertNewItem = connection.prepareStatement(insertNewItemsStatement);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+
     }
 
     public DataSource(TextField name, File directory, File img) {
@@ -65,6 +79,9 @@ public class DataSource {
                     ", \"COLLECTIONBG\"\tBLOB)");
 
             insertIntoItemsCreation = connection.prepareStatement(insertIntoItemsCreationStatement);
+            if (!prepareStatements()) {
+                throw new SQLException();
+            }
             insertIntoItemsCreation.setString(1, name.getText());
             insertIntoItemsCreation.setBytes(2, covertFileToByteArray(img));
             insertIntoItemsCreation.execute();
