@@ -25,11 +25,11 @@
 
     <left>
         <GridPane fx:id="gridPane">
-            <VBox fx:id="leftVBox" prefWidth="230"
+            <VBox fx:id="leftVBox" prefWidth="232"
                   GridPane.columnIndex="0" GridPane.rowIndex="0">
 
             </VBox>
-            <VBox fx:id="creationVBox" prefWidth="230"
+            <VBox fx:id="creationVBox" prefWidth="232"
                   GridPane.columnIndex="0" GridPane.rowIndex="1">
 
                 <Button alignment="BOTTOM_CENTER" maxWidth="Infinity" prefHeight="50" wrapText="true"
@@ -50,7 +50,7 @@
         <BorderPane>
             <top>
                 <StackPane fx:id="stackPane" prefHeight="170"
-                           maxHeight="170" maxWidth="1050">
+                           maxHeight="170" maxWidth="1048">
                     <ImageView fx:id="collectionImage">
                     </ImageView>
                     <Label fx:id="collectionNameLabel" text="No collection selected"/>

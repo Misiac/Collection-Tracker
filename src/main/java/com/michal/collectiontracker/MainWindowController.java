@@ -132,8 +132,9 @@ public class MainWindowController {
             }
 
             ImageView imageView = new ImageView(collectionItem.getImage());
-            imageView.setFitHeight(129);
-            imageView.setFitWidth(129);
+            imageView.setFitHeight(127);
+            imageView.setFitWidth(127);
+            gridPane.setMaxWidth(127);
             checkBox.setPadding(new Insets(5));
             checkBox.setOnAction(this::handleCheckBoxClick);
 
@@ -141,6 +142,7 @@ public class MainWindowController {
             gridPane.add(itemName, 0, 1, 2, 1);
             gridPane.add(itemID, 0, 2, 1, 1);
             gridPane.add(checkBox, 1, 2, 1, 1);
+
 
 
             GridPane.setHalignment(itemName, HPos.CENTER);
