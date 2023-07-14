@@ -12,7 +12,7 @@
         <MenuBar>
             <Menu mnemonicParsing="false" text="File">
                 <MenuItem mnemonicParsing="false" text="Open collection" onAction="#chooseFile"/>
-                <CheckMenuItem text="Enable creation mode" onAction="#handleCreationModeSwitch"/>
+                <CheckMenuItem text="Toggle creation mode" onAction="#handleCreationModeSwitch"/>
                 <MenuItem mnemonicParsing="false" text="Exit" onAction="#close"/>
 
             </Menu>
@@ -25,11 +25,11 @@
 
     <left>
         <GridPane fx:id="gridPane">
-            <VBox fx:id="leftVBox" prefWidth="${rootPane.width*0.18}"
+            <VBox fx:id="leftVBox" prefWidth="230"
                   GridPane.columnIndex="0" GridPane.rowIndex="0">
 
             </VBox>
-            <VBox fx:id="creationVBox" prefWidth="${rootPane.width*0.18}"
+            <VBox fx:id="creationVBox" prefWidth="230"
                   GridPane.columnIndex="0" GridPane.rowIndex="1">
 
                 <Button alignment="BOTTOM_CENTER" maxWidth="Infinity" prefHeight="50" wrapText="true"
@@ -49,8 +49,8 @@
 
         <BorderPane>
             <top>
-                <StackPane fx:id="stackPane" prefHeight="${rootPane.height*0.22}"
-                           maxHeight="${rootPane.height*0.22}" maxWidth="1049.6">
+                <StackPane fx:id="stackPane" prefHeight="170"
+                           maxHeight="170" maxWidth="1050">
                     <ImageView fx:id="collectionImage">
                     </ImageView>
                     <Label fx:id="collectionNameLabel" text="No collection selected"/>
