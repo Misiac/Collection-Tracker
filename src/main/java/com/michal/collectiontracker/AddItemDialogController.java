@@ -18,6 +18,7 @@ public class AddItemDialogController {
     @FXML
     private DialogPane rootCreationDialog;
     private File imgFile;
+    private static File previousPath;
 
     public void initialize() {
         imgFile = null;
@@ -42,10 +43,15 @@ public class AddItemDialogController {
     @FXML
     public void chooseImg() {
         FileChooser fileChooser = new FileChooser();
+        if (previousPath != null) {
+            fileChooser.setInitialDirectory(previousPath);
+        }
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Image", "*.jpg", "*.png")
         );
         this.imgFile = fileChooser.showOpenDialog(rootCreationDialog.getScene().getWindow());
+
+        previousPath = imgFile.getParentFile();
 
     }
 
