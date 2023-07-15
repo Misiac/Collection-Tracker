@@ -10,7 +10,7 @@
 .toggle-button:selected, #addButton:selected{
     -fx-background-color:#333333;
  
-    /* hovered over but not selected */
+/* hovered over but not selected */
 }
 .toggle-button:hover, #creationButton:hover,
 #addButton:hover{
@@ -31,6 +31,7 @@
 #stackPane{
 
     -fx-background-color:#383838;
+
 }
 #flowPane{
 -fx-background-color:#121212;
@@ -50,7 +51,6 @@
     -fx-font-size:15;
     -fx-text-fill:white;
     -fx-border-color: #2B2B2B;
-
 }
 
 #collectionNameLabel, #collectedNumber, #addButton{
@@ -62,7 +62,7 @@
 #addButton{
 -fx-font-size:12;
 -font-family: 'JetBrains Mono', monospace;
--fx-background-color:#A9A9A9;
+-fx-background-color:#4D4D4D;
 }
 .dialog-pane {
     -fx-background-color: #383838;
