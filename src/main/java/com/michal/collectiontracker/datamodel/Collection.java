@@ -1,9 +1,12 @@
 package com.michal.collectiontracker.datamodel;
 
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +25,7 @@ public class Collection {
     private Image backgroundImage;
     private int totalNumberOfItems;
     private int numberOfItemsOwned;
+    private static File tempFile = new File(System.getProperty("java.io.tmpdir") + "collectiontemp.png");
 
     public String getCollectionName() {
         return collectionName;
@@ -44,7 +48,7 @@ public class Collection {
         }
     }
 
-    public Collection(File collectionFile) throws SQLException, IOException {
+    public Collection(File collectionFile) throws SQLException {
         this.file = collectionFile;
         thisDatasource = new DataSource(collectionFile.getAbsolutePath());
         ResultSet items = thisDatasource.queryItems();
@@ -78,23 +82,34 @@ public class Collection {
     }
 
     public Collection(TextField name, File directory, File img) {
+
         thisDatasource = new DataSource(name, directory, img);
+
         this.file = new File(directory.getAbsolutePath() + "/" + name.getText() + ".sav");
         this.collectionName = name.getText();
         try {
             this.backgroundImage = new Image(img.toURI().toURL().toExternalForm());
         } catch (MalformedURLException e) {
-            System.out.println("path erorr");
+            System.out.println("path error");
         }
         numberOfItemsOwned = 0;
         totalNumberOfItems = 0;
 
     }
 
-    public void loadCollectionFromFile(File collection) {
+    public static boolean saveImageToFile(Image image) {
+        try {
 
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+            ImageIO.write(bufferedImage, "png", tempFile);
+
+            return true;
+
+        } catch (IOException e) {
+            System.out.println("Failed to save image: " + e.getMessage());
+            return false;
+        }
     }
-
 
     public Map<Integer, CollectionItem> getCollectionItems() {
         return collectionItems;
@@ -110,18 +125,25 @@ public class Collection {
 
     public void addItem(TextField newName, TextField newNumber, File imgFile) {
 
-        thisDatasource.addNewItemToDB(newName, newNumber, imgFile);
+
+        Image resizedImage;
+        try {
+            resizedImage = new Image(imgFile.toURI().toURL().toExternalForm(), 127, 127, true, true);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+        saveImageToFile(resizedImage);
+
 
         int number = Integer.parseInt(newNumber.getText());
-        CollectionItem newCollectionItem = null;
-        try {
-            newCollectionItem = new CollectionItem(number, newName.getText(), new Image(imgFile.toURI().toURL().toExternalForm()), false);
-        } catch (MalformedURLException e) {
-            System.out.println("url error");
-        }
+        CollectionItem newCollectionItem;
+
+        newCollectionItem = new CollectionItem(number, newName.getText(), resizedImage, false);
+
+
+        thisDatasource.addNewItemToDB(newName, newNumber, tempFile);
         collectionItems.put(number, newCollectionItem);
         totalNumberOfItems++;
-
 
     }
 }

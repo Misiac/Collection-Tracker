@@ -3,7 +3,6 @@ package com.michal.collectiontracker;
 import javafx.fxml.FXML;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -13,8 +12,6 @@ public class AddItemDialogController {
     private TextField newName;
     @FXML
     private TextField newNumber;
-    @FXML
-    private GridPane addItemGrid;
     @FXML
     private DialogPane rootCreationDialog;
     private File imgFile;
@@ -33,10 +30,7 @@ public class AddItemDialogController {
         } catch (NumberFormatException e) {
             return false;
         }
-        if (newName.getText() != null && imgFile != null) {
-            return true;
-        }
-        return false;
+        return newName.getText() != null && imgFile != null;
 
     }
 

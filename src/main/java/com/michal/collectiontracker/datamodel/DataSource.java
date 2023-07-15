@@ -109,8 +109,6 @@ public class DataSource {
         } catch (SQLException e) {
             System.out.println("Error Executing infoquery");
             return null;
-        } finally {
-
         }
     }
 
@@ -141,6 +139,7 @@ public class DataSource {
             bos = new ByteArrayOutputStream();
             for (int len; (len = fis.read(buffer)) != -1; ) {
                 bos.write(buffer, 0, len);
+
             }
         } catch (IOException e) {
             System.err.println(e.getMessage());

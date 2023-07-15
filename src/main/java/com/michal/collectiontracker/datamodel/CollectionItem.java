@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 public class CollectionItem {
     int id;
     String name;
-
     Image image;
     boolean isOwned;
 

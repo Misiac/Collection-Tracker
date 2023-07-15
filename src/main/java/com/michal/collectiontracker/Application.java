@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Application extends javafx.application.Application {
@@ -35,5 +36,6 @@ public class Application extends javafx.application.Application {
     public void stop() throws Exception {
         ((MainWindowController) fxmlLoader.getController()).close();
         super.stop();
+
     }
 }
