@@ -56,6 +56,7 @@ public class MainWindowController {
 
         scrollPane.fitToHeightProperty().set(true);
         scrollPane.fitToWidthProperty().set(true);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
         addButton = new Button("Add item");
         addButton.setId("addButton");
@@ -132,9 +133,13 @@ public class MainWindowController {
             }
 
             ImageView imageView = new ImageView(collectionItem.getImage());
+
+            gridPane.setPrefWidth(128);
+
             imageView.setFitHeight(127);
             imageView.setFitWidth(127);
-            gridPane.setMaxWidth(127);
+
+
             checkBox.setPadding(new Insets(5));
             checkBox.setOnAction(this::handleCheckBoxClick);
 
@@ -142,7 +147,6 @@ public class MainWindowController {
             gridPane.add(itemName, 0, 1, 2, 1);
             gridPane.add(itemID, 0, 2, 1, 1);
             gridPane.add(checkBox, 1, 2, 1, 1);
-
 
 
             GridPane.setHalignment(itemName, HPos.CENTER);
@@ -203,6 +207,7 @@ public class MainWindowController {
             System.out.println(e.getMessage());
         }
         aboutDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+
         Optional<ButtonType> result = aboutDialog.showAndWait();
 
     }
@@ -316,7 +321,7 @@ public class MainWindowController {
                 alreadyPresentAlert.setContentText("Choose another file");
                 alreadyPresentAlert.showAndWait();
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }
