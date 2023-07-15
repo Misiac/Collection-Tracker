@@ -1,69 +1,84 @@
-.toggle-button, #creationButton {
-    -fx-background-color:#383838;
-    -fx-font-size:15;
+.toggle-button,
+#creationButton {
+    -fx-background-color: #383838;
+    -fx-font-size: 15;
     -fx-font-weight: bold;
     -fx-border-width: 0 0 0 0;
     -font-family: 'JetBrains Mono', monospace;
-       -fx-text-fill:white;
+    -fx-text-fill: white;
 }
-/* selected, but not hovered over */
-.toggle-button:selected, #addButton:selected{
-    -fx-background-color:#333333;
- 
-/* hovered over but not selected */
-}
-.toggle-button:hover, #creationButton:hover,
-#addButton:hover{
-    -fx-background-color:#4D4D4D;
 
-/* hovered over and selected */
+/* selected, but not hovered over */
+.toggle-button:selected,
+#addButton:selected {
+    -fx-background-color: #333333;
+
+    /* hovered over, but not selected */
 }
-.toggle-button:hover:selected,
-#addButton:hover:selected{
-    -fx-background-color:#777777;
+
+.toggle-button:hover,
+#creationButton:hover,
+#addButton:hover {
+    -fx-background-color: #4D4D4D;
+
+    /* hovered over and selected */
 }
-#gridPane{
-    -fx-background-color:#383838;
+
+.toggle-button:hover:selected {
+    -fx-background-color: #777777;
+}
+
+#gridPane {
+    -fx-background-color: #383838;
     -fx-border-width: 0 1 0 0;
     -fx-border-color: white;
 
 }
-#stackPane{
 
-    -fx-background-color:#383838;
+#stackPane {
+    -fx-background-color: #383838;
+}
 
+#flowPane {
+    -fx-background-color: #121212;
 }
-#flowPane{
--fx-background-color:#121212;
-}
-#flowPane, #scrollPane{
-    -fx-text-fill:white;
+
+#flowPane,
+#scrollPane {
+    -fx-text-fill: white;
     -fx-border-width: 0;
 }
-#scrollPane{
 
-    -fx-background-color:transparent;
+#scrollPane {
+    -fx-background-color: transparent;
     -fx-background: transparent;
     -fx-border-width: 0;
     -fx-padding: 0;
 }
-#flowPane .collectionGrid{
-    -fx-font-size:15;
-    -fx-text-fill:white;
+
+#flowPane .collectionGrid {
+    -fx-font-size: 15;
+    -fx-text-fill: white;
     -fx-border-color: #2B2B2B;
 }
 
-#collectionNameLabel, #collectedNumber, #addButton{
+#collectionNameLabel,
+#collectedNumber,
+#addButton {
     -font-family: 'JetBrains Mono', monospace;
-    -fx-font-size:30;
+    -fx-font-size: 30;
     -fx-font-weight: bold;
-    -fx-text-fill:white;
+    -fx-text-fill: white;
 }
-#addButton{
--fx-font-size:12;
--font-family: 'JetBrains Mono', monospace;
--fx-background-color:#4D4D4D;
+
+#addButton {
+    -fx-font-size: 12;
+    -font-family: 'JetBrains Mono', monospace;
+    -fx-background-color: #383838;
 }
+
+#addButton:hover:selected {}
+
 .dialog-pane {
     -fx-background-color: #383838;
 }
@@ -71,7 +86,5 @@
 .dialog-pane .label {
     -fx-text-fill: white;
 }
+
 .
-
-
-
