@@ -54,6 +54,7 @@ public class MainWindowController {
         currentCollectionName = null;
         isCreationModeEnabled = false;
 
+        scrollPane.setStyle("-fx-background-color:transparent;");
         scrollPane.fitToHeightProperty().set(true);
         scrollPane.fitToWidthProperty().set(true);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
@@ -135,8 +136,10 @@ public class MainWindowController {
             ImageView imageView = new ImageView(collectionItem.getImage());
 
             gridPane.setPrefWidth(128);
+            gridPane.setPrefHeight(150);
+            gridPane.setMaxHeight(150);
 
-            imageView.setFitHeight(127);
+            imageView.setFitHeight(125);
             imageView.setFitWidth(127);
 
 

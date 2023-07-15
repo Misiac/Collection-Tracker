@@ -49,8 +49,8 @@
 
         <BorderPane>
             <top>
-                <StackPane fx:id="stackPane" prefHeight="170"
-                           maxHeight="170" maxWidth="1048">
+                <StackPane fx:id="stackPane" prefHeight="159"
+                           maxHeight="159" maxWidth="1048">
                     <ImageView fx:id="collectionImage">
                     </ImageView>
                     <Label fx:id="collectionNameLabel" text="No collection selected"/>
