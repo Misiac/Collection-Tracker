@@ -2,6 +2,7 @@ package com.michal.collectiontracker;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -27,6 +28,7 @@ public class CreationDialogController {
     public void initialize() {
         choosenDirectory = null;
         choosenImg = null;
+        newName.setContextMenu(new ContextMenu());
 
     }
 

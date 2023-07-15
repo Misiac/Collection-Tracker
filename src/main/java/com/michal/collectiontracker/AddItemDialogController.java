@@ -1,6 +1,7 @@
 package com.michal.collectiontracker;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
@@ -19,6 +20,8 @@ public class AddItemDialogController {
 
     public void initialize() {
         imgFile = null;
+        newName.setContextMenu(new ContextMenu());
+        newNumber.setContextMenu(new ContextMenu());
 
     }
 
