@@ -81,7 +81,6 @@
 
 .dialog-pane {
     -fx-background-color: #383838;
-    -text-area-background: #333333;
 }
 
 .dialog-pane .label {
@@ -101,6 +100,13 @@
 
 .dialog-pane .button:hover {
   -fx-background-color:#454545;
+}
+.alreadyAlert{
+-fx-background-color: #383838;
+-fx-text-fill:white;
+}
+.alreadyAlert:header *.header-panel{
+-fx-background-color: #383838;
 }
 
 .

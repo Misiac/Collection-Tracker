@@ -319,9 +319,15 @@ public class MainWindowController {
                 leftVBox.getChildren().add(button);
             } else {
                 Alert alreadyPresentAlert = new Alert(Alert.AlertType.WARNING);
+                DialogPane dialog = alreadyPresentAlert.getDialogPane();
+                dialog.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+                dialog.getStyleClass().add("alreadyAlert");
+
+
                 alreadyPresentAlert.setTitle("Already loaded");
                 alreadyPresentAlert.setHeaderText("Selected collection is already loaded");
                 alreadyPresentAlert.setContentText("Choose another file");
+
                 alreadyPresentAlert.showAndWait();
             }
         } catch (Exception ignored) {
