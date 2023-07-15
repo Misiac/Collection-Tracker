@@ -132,19 +132,23 @@ public class DataSource {
     }
 
     private static byte[] covertFileToByteArray(File file) {
-        ByteArrayOutputStream bos = null;
-        try {
-            FileInputStream fis = new FileInputStream(file);
+        ByteArrayOutputStream bos;
+        byte[] returnArray = null;
+        try (FileInputStream fis = new FileInputStream(file)) {
+
             byte[] buffer = new byte[1024];
             bos = new ByteArrayOutputStream();
             for (int len; (len = fis.read(buffer)) != -1; ) {
                 bos.write(buffer, 0, len);
+                returnArray = bos.toByteArray();
+                bos.close();
 
             }
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
-        return bos != null ? bos.toByteArray() : null;
+
+        return returnArray;
     }
 
     public void close() {

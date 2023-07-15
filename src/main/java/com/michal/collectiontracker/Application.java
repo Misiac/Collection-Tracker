@@ -35,6 +35,12 @@ public class Application extends javafx.application.Application {
     @Override
     public void stop() throws Exception {
         ((MainWindowController) fxmlLoader.getController()).close();
+
+        File generatedImage = new File(System.getProperty("java.io.tmpdir") + "collectiontemp.png");
+
+        if (generatedImage.exists()) {
+            generatedImage.delete();
+        }
         super.stop();
 
     }

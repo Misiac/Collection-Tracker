@@ -97,17 +97,14 @@ public class Collection {
 
     }
 
-    public static boolean saveImageToFile(Image image) {
+    public static void saveImageToFile(Image image) {
         try {
 
             BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
             ImageIO.write(bufferedImage, "png", tempFile);
 
-            return true;
-
         } catch (IOException e) {
             System.out.println("Failed to save image: " + e.getMessage());
-            return false;
         }
     }
 
@@ -139,9 +136,8 @@ public class Collection {
         CollectionItem newCollectionItem;
 
         newCollectionItem = new CollectionItem(number, newName.getText(), resizedImage, false);
-
-
         thisDatasource.addNewItemToDB(newName, newNumber, tempFile);
+
         collectionItems.put(number, newCollectionItem);
         totalNumberOfItems++;
 
