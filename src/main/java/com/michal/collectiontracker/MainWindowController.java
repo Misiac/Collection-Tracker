@@ -139,7 +139,7 @@ public class MainWindowController {
             gridPane.setPrefHeight(150);
             gridPane.setMaxHeight(150);
 
-            imageView.setFitHeight(125);
+            imageView.setFitHeight(124);
             imageView.setFitWidth(127);
 
 
