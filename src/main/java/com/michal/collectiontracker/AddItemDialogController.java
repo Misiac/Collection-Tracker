@@ -9,6 +9,7 @@ import javafx.stage.FileChooser;
 import java.io.File;
 
 public class AddItemDialogController {
+
     @FXML
     private TextField newName;
     @FXML

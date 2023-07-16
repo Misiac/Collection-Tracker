@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 public class Application extends javafx.application.Application {
     FXMLLoader fxmlLoader;
@@ -39,7 +40,7 @@ public class Application extends javafx.application.Application {
         File generatedImage = new File(System.getProperty("java.io.tmpdir") + "collectiontemp.png");
 
         if (generatedImage.exists()) {
-            generatedImage.delete();
+            Files.delete(generatedImage.toPath());
         }
         super.stop();
 

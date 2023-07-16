@@ -1,6 +1,5 @@
 package com.michal.collectiontracker;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DialogPane;
@@ -33,13 +32,13 @@ public class CreationDialogController {
     }
 
     @FXML
-    public void chooseDirectory(ActionEvent actionEvent) {
+    public void chooseDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         this.choosenDirectory = directoryChooser.showDialog(rootCreationDialog.getScene().getWindow());
     }
 
     @FXML
-    public void chooseImg(ActionEvent actionEvent) {
+    public void chooseImg() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Image", "*.jpg", "*.png")

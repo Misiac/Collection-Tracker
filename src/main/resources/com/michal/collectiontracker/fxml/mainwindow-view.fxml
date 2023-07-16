@@ -29,7 +29,7 @@
                   GridPane.columnIndex="0" GridPane.rowIndex="0">
 
             </VBox>
-            <VBox fx:id="creationVBox" prefWidth="232"
+            <VBox  prefWidth="232"
                   GridPane.columnIndex="0" GridPane.rowIndex="1">
 
                 <Button alignment="BOTTOM_CENTER" maxWidth="Infinity" prefHeight="50" wrapText="true"

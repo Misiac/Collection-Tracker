@@ -65,16 +65,18 @@ public class DataSource {
         }
         try {
             Statement statement = connection.createStatement();
-            statement.execute("CREATE TABLE \"Items\" (\n" +
-                    "\t\"ID\"\tInt NOT NULL,\n" +
-                    "\t\"NAME\"\tTEXT NOT NULL,\n" +
-                    "\t\"PHOTO\"\tBLOB,\n" +
-                    "\t\"isOwned\"\tINTEGER NOT NULL,\n" +
-                    "\tPRIMARY KEY(\"ID\")\n" +
-                    ")");
-            statement.execute("CREATE TABLE \"Info\" (\n" +
-                    "\t\"COLLECTIONNAME\"\tTEXT NOT NULL\n" +
-                    ", \"COLLECTIONBG\"\tBLOB)");
+            statement.execute("""
+                    CREATE TABLE "Items" (
+                    \t"ID"\tInt NOT NULL,
+                    \t"NAME"\tTEXT NOT NULL,
+                    \t"PHOTO"\tBLOB,
+                    \t"isOwned"\tINTEGER NOT NULL,
+                    \tPRIMARY KEY("ID")
+                    )""");
+            statement.execute("""
+                    CREATE TABLE "Info" (
+                    \t"COLLECTIONNAME"\tTEXT NOT NULL
+                    , "COLLECTIONBG"\tBLOB)""");
 
             insertIntoItemsCreation = connection.prepareStatement(insertIntoItemsCreationStatement);
             if (!prepareStatements()) {

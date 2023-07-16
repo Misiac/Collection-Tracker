@@ -10,7 +10,7 @@
 fx:id="rootCreationDialog">
 
     <content>
-        <GridPane fx:id="addItemGrid" vgap="40" hgap="40">
+        <GridPane  vgap="40" hgap="40">
 
             <Label text="Step 1: Enter name" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
             <TextField fx:id="newName" GridPane.rowIndex="0" GridPane.columnIndex="1"/>

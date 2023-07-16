@@ -18,14 +18,14 @@ import java.util.Map;
 
 public class Collection {
 
-    private Map<Integer, CollectionItem> collectionItems = new HashMap<>();
-    private DataSource thisDatasource;
-    private File file;
+    private final Map<Integer, CollectionItem> collectionItems = new HashMap<>();
+    private final DataSource thisDatasource;
+    private final File file;
     private String collectionName;
     private Image backgroundImage;
     private int totalNumberOfItems;
     private int numberOfItemsOwned;
-    private static File tempFile = new File(System.getProperty("java.io.tmpdir") + "collectiontemp.png");
+    private static final File tempFile = new File(System.getProperty("java.io.tmpdir") + "collectiontemp.png");
 
     public String getCollectionName() {
         return collectionName;
