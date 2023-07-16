@@ -102,11 +102,32 @@
   -fx-background-color:#454545;
 }
 .alreadyAlert{
--fx-background-color: #383838;
--fx-text-fill:white;
+    -fx-background-color: #383838;
+    -fx-text-fill:white;
 }
 .alreadyAlert:header *.header-panel{
--fx-background-color: #383838;
+    -fx-background-color: #383838;
+}
+.itemName{
+    -fx-font-weight: bold;
+}
+.itemId{
+-fx-font-size: 12;
+}
+.itemBox .box{
+    -fx-background-radius: 7px;
+    -fx-pref-width: 13px;
+    -fx-pref-height: 13px;
 }
 
+.itemBox .box{
+    -fx-background-color:#383838;
+}
+
+.itemBox:selected .box{
+    -fx-background-color:#68FF81;
+}
+.itemBox:selected .mark{
+    -fx-background-color: transparent;
+}
 .

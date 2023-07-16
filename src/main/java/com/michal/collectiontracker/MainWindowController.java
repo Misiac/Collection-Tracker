@@ -125,8 +125,13 @@ public class MainWindowController {
             gridPane.getStyleClass().add("collectionGrid");
 
             Label itemName = new Label(collectionItem.getName());
+            itemName.getStyleClass().add("itemName");
+
             Label itemID = new Label("Number: " + collectionItem.getId());
+            itemID.getStyleClass().add("itemId");
+
             CheckBox checkBox = new CheckBox();
+            checkBox.getStyleClass().add("itemBox");
             checkBoxMap.put(checkBox, collectionItem.getId());
 
             if (collectionItem.isOwned()) {
