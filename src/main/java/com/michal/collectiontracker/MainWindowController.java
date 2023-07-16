@@ -189,7 +189,7 @@ public class MainWindowController {
 
     private void calculateCollectedNumber(Collection collection) {
         collectedNumber.setText(collection.getNumberOfItemsOwned() + " out of " +
-                collection.getTotalNumberOfItems() + " Collected");
+                collection.getTotalNumberOfItems());
     }
 
     @FXML
