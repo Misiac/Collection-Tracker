@@ -43,8 +43,8 @@ public class MainWindowController {
     public ScrollPane scrollPane;
     Button addButton;
     ToggleGroup buttonsGroup;
-    private Map<String, Collection> collectionMap = new HashMap<>();
-    private Map<CheckBox, Integer> checkBoxMap = new HashMap<>();
+    private final Map<String, Collection> collectionMap = new HashMap<>();
+    private final Map<CheckBox, Integer> checkBoxMap = new HashMap<>();
     private String currentCollectionName;
     boolean isCreationModeEnabled;
 
@@ -79,7 +79,6 @@ public class MainWindowController {
     @FXML
     public void chooseFile() {
         FileChooser fileChooser = new FileChooser();
-        // fileChooser.setInitialDirectory(new File("data"));  implement later :)
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("CT save files", "*.sav"));
         File file = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
@@ -102,6 +101,8 @@ public class MainWindowController {
 
         if (!selectedCollection.getCollectionName().equals(currentCollectionName)) {
             renderCollection(selectedCollection);
+        } else {
+            ((ToggleButton) actionEvent.getSource()).setSelected(true);
         }
 
 
