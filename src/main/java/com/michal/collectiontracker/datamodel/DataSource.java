@@ -20,8 +20,6 @@ public class DataSource {
     private PreparedStatement updateItemStatus;
     private PreparedStatement insertIntoItemsCreation;
     private PreparedStatement insertNewItem;
-    private final String insertIntoItemsCreationStatement = "INSERT INTO Info VALUES(?,?)";
-    private final String insertNewItemsStatement = "INSERT INTO Items VALUES (?, ?, ?,0)";
 
 
     public DataSource(String absolutePath) {
@@ -40,9 +38,11 @@ public class DataSource {
             e.printStackTrace();
         }
     }
-
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean prepareStatements() {
         try {
+            String insertNewItemsStatement = "INSERT INTO Items VALUES (?, ?, ?,0)";
+
             queryItems = connection.prepareStatement("SELECT * FROM Items");
             queryInfo = connection.prepareStatement("SELECT * FROM Info");
             updateItemStatus = connection.prepareStatement("UPDATE Items SET isOwned = ? WHERE ID = ?");
@@ -77,6 +77,8 @@ public class DataSource {
                     CREATE TABLE "Info" (
                     \t"COLLECTIONNAME"\tTEXT NOT NULL
                     , "COLLECTIONBG"\tBLOB)""");
+
+            String insertIntoItemsCreationStatement = "INSERT INTO Info VALUES(?,?)";
 
             insertIntoItemsCreation = connection.prepareStatement(insertIntoItemsCreationStatement);
             if (!prepareStatements()) {

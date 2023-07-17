@@ -20,7 +20,6 @@ public class Collection {
 
     private final Map<Integer, CollectionItem> collectionItems = new HashMap<>();
     private final DataSource thisDatasource;
-    private final File file;
     private String collectionName;
     private Image backgroundImage;
     private int totalNumberOfItems;
@@ -49,7 +48,6 @@ public class Collection {
     }
 
     public Collection(File collectionFile) throws SQLException {
-        this.file = collectionFile;
         thisDatasource = new DataSource(collectionFile.getAbsolutePath());
         ResultSet items = thisDatasource.queryItems();
 
@@ -85,7 +83,6 @@ public class Collection {
 
         thisDatasource = new DataSource(name, directory, img);
 
-        this.file = new File(directory.getAbsolutePath() + "/" + name.getText() + ".sav");
         this.collectionName = name.getText();
         try {
             this.backgroundImage = new Image(img.toURI().toURL().toExternalForm());
@@ -121,7 +118,6 @@ public class Collection {
     }
 
     public void addItem(TextField newName, TextField newNumber, File imgFile) {
-
 
         Image resizedImage;
         try {

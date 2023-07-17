@@ -220,7 +220,7 @@ public class MainWindowController {
         }
         aboutDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
 
-        Optional<ButtonType> result = aboutDialog.showAndWait();
+        aboutDialog.showAndWait();
 
     }
 
@@ -276,8 +276,11 @@ public class MainWindowController {
                 }
 
             }
+            if (result.isPresent()) {
+                if (result.get().getButtonData().isCancelButton()) return;
+            }
 
-            if (result.get().getButtonData().isCancelButton()) return;
+
         } while (!controller.isEverythingSet() || Files.exists(Objects.requireNonNull(futureCollectionPath)));
 
 
@@ -311,7 +314,11 @@ public class MainWindowController {
         do {
             result = addItemDialog.showAndWait();
 
-            if (result.get().getButtonData().isCancelButton()) return;
+            if (result.isPresent()) {
+                if (result.get().getButtonData().isCancelButton()) return;
+            }
+
+
         } while (!controller.isInputOkay());
 
         Collection currentCollection = collectionMap.get(currentCollectionName);

@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Objects;
 
 public class Application extends javafx.application.Application {
     FXMLLoader fxmlLoader;
@@ -16,9 +17,9 @@ public class Application extends javafx.application.Application {
     public void start(Stage stage) throws IOException {
         fxmlLoader = new FXMLLoader(Application.class.getResource("fxml/mainwindow-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
-        scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
 
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("img/icon.png")));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("img/icon.png"))));
 
         stage.setTitle("Collection Tracker");
         stage.setScene(scene);
