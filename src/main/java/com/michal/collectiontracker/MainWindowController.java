@@ -347,7 +347,7 @@ public class MainWindowController {
                 ToggleButton button = new ToggleButton(collection.getCollectionName());
                 button.setAlignment(Pos.BOTTOM_LEFT);
                 button.setMaxWidth(Double.MAX_VALUE);
-                button.setPrefHeight(50);
+                button.setPrefHeight(55);
                 button.setWrapText(true);
                 button.setToggleGroup(buttonsGroup);
 
