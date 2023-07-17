@@ -17,6 +17,9 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -77,7 +80,7 @@ public class MainWindowController {
     }
 
     @FXML
-    public void chooseFile() {
+    public void chooseCollectionFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("CT save files", "*.sav"));
@@ -250,12 +253,32 @@ public class MainWindowController {
 
         creationDialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
         Optional<ButtonType> result;
-
+        Path futureCollectionPath = null;
         do {
             result = creationDialog.showAndWait();
 
+            if (controller.choosenDirectory != null) {
+                futureCollectionPath = Paths.get(controller.choosenDirectory.getPath()
+                        + File.separator + controller.newName.getText() + ".sav");
+                if (Files.exists(futureCollectionPath) && controller.isEverythingSet()) {
+
+                    Alert collectionExistsAlert = new Alert(Alert.AlertType.WARNING);
+                    DialogPane dialog = collectionExistsAlert.getDialogPane();
+                    dialog.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+                    dialog.getStyleClass().add("alert");
+
+
+                    collectionExistsAlert.setTitle("Collection exists");
+                    collectionExistsAlert.setHeaderText("Collection with the choosen path and name already exists");
+                    collectionExistsAlert.setContentText("Choose another name or path");
+
+                    collectionExistsAlert.showAndWait();
+                }
+
+            }
+
             if (result.get().getButtonData().isCancelButton()) return;
-        } while (!controller.isEverythingSet());
+        } while (!controller.isEverythingSet() || Files.exists(Objects.requireNonNull(futureCollectionPath)));
 
 
         createNewCollection(
@@ -326,8 +349,8 @@ public class MainWindowController {
             } else {
                 Alert alreadyPresentAlert = new Alert(Alert.AlertType.WARNING);
                 DialogPane dialog = alreadyPresentAlert.getDialogPane();
-                dialog.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
-                dialog.getStyleClass().add("alreadyAlert");
+                dialog.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+                dialog.getStyleClass().add("alert");
 
 
                 alreadyPresentAlert.setTitle("Already loaded");

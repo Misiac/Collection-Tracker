@@ -11,7 +11,7 @@
     <top>
         <MenuBar>
             <Menu mnemonicParsing="false" text="File">
-                <MenuItem mnemonicParsing="false" text="Open collection" onAction="#chooseFile"/>
+                <MenuItem mnemonicParsing="false" text="Open collection" onAction="#chooseCollectionFile"/>
                 <CheckMenuItem text="Toggle creation mode" onAction="#handleCreationModeSwitch"/>
                 <MenuItem mnemonicParsing="false" text="Exit" onAction="#close"/>
 

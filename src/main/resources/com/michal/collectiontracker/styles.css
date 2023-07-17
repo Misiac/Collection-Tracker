@@ -111,12 +111,12 @@
     -fx-background-color: #454545;
 }
 
-.alreadyAlert {
+.alert {
     -fx-background-color: #383838;
     -fx-text-fill: white;
 }
 
-.alreadyAlert:header *.header-panel {
+.alert:header *.header-panel {
     -fx-background-color: #383838;
 }
 
