@@ -2,8 +2,7 @@
 
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.michal.collectiontracker.MainWindowController" fx:id="rootPane">
@@ -29,7 +28,7 @@
                   GridPane.columnIndex="0" GridPane.rowIndex="0">
 
             </VBox>
-            <VBox  prefWidth="232"
+            <VBox prefWidth="232"
                   GridPane.columnIndex="0" GridPane.rowIndex="1">
 
                 <Button alignment="BOTTOM_CENTER" maxWidth="Infinity" prefHeight="50" wrapText="true"
@@ -52,7 +51,15 @@
                 <StackPane fx:id="stackPane" prefHeight="159"
                            maxHeight="159" maxWidth="1048">
                     <ImageView fx:id="collectionImage">
+
                     </ImageView>
+                    <Button fx:id="menuButton">
+                        <graphic>
+                            <ImageView>
+                                <Image url="@../img/4px.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Button>
                     <Label fx:id="collectionNameLabel" text="No collection selected"/>
                     <Label fx:id="collectedNumber"/>
 

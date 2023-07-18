@@ -12,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 
@@ -44,6 +45,10 @@ public class MainWindowController {
     public Button creationButton;
     @FXML
     public ScrollPane scrollPane;
+    @FXML
+    public ImageView menuImage;
+    @FXML
+    public Button menuButton;
     Button addButton;
     ToggleGroup buttonsGroup;
     private final Map<String, Collection> collectionMap = new HashMap<>();
@@ -70,11 +75,23 @@ public class MainWindowController {
         addButton.setOnAction(this::showAddItemDialog);
 
 
+        StackPane.setAlignment(menuButton, Pos.TOP_RIGHT);
         StackPane.setAlignment(collectionNameLabel, Pos.BOTTOM_LEFT);
         StackPane.setAlignment(collectedNumber, Pos.BOTTOM_RIGHT);
 
+
         creationButton.setVisible(false);
         addButton.setVisible(false);
+
+
+        MenuItem item1 = new MenuItem("test");
+        ContextMenu contextMenu = new ContextMenu(item1);
+
+        menuButton.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+            if (event.isPrimaryButtonDown()) {
+                contextMenu.show(menuButton, event.getScreenX(), event.getScreenY());
+            }
+        });
 
 
     }
