@@ -46,8 +46,6 @@ public class MainWindowController {
     @FXML
     public ScrollPane scrollPane;
     @FXML
-    public ImageView menuImage;
-    @FXML
     public Button menuButton;
     Button addButton;
     ToggleGroup buttonsGroup;
@@ -88,13 +86,18 @@ public class MainWindowController {
         MenuItem item1 = new MenuItem("Share non-selected collection");
         item1.setOnAction(e -> shareCollection());
 
-        MenuItem item2 = new MenuItem("Change collection bg image");
-        item2.setOnAction(e -> updateBgImage());
+        MenuItem item2 = new MenuItem("Change name");
+        item2.setOnAction(e -> unloadCollection());
 
-        MenuItem item3 = new MenuItem("Unload collection");
-        item3.setOnAction(e -> unloadCollection());
-        
-        ContextMenu contextMenu = new ContextMenu(item1, item2, item3);
+        MenuItem item3 = new MenuItem("Change collection bg image");
+        item3.setOnAction(e -> handleUpdateBgImage());
+
+        MenuItem item4 = new MenuItem("Unload collection");
+        item4.setOnAction(e -> unloadCollection());
+
+
+
+        ContextMenu contextMenu = new ContextMenu(item1, item2, item3, item4);
 
         menuButton.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
             if (event.isPrimaryButtonDown()) {
@@ -112,8 +115,22 @@ public class MainWindowController {
     private void shareCollection() {
     }
 
-    private void updateBgImage() {
-        
+    private void handleUpdateBgImage() {
+
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Image", "*.jpg", "*.png")
+        );
+        File newImg = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
+
+        if (newImg != null) {
+            var currentCol = collectionMap.get(currentCollectionName);
+            currentCol.updateBgImage(newImg);
+            collectionImage.setFitHeight(stackPane.getMaxHeight());
+            collectionImage.setFitWidth(stackPane.getMaxWidth());
+            collectionImage.setImage(currentCol.getBackgroundImage());
+        }
 
     }
 

@@ -16,6 +16,7 @@ public class DataSource {
     private final String CONNECTION_STRING;
     private Connection connection;
     private PreparedStatement queryItems;
+    private PreparedStatement updateBgImage;
     private PreparedStatement queryInfo;
     private PreparedStatement updateItemStatus;
     private PreparedStatement insertIntoItemsCreation;
@@ -38,6 +39,7 @@ public class DataSource {
             e.printStackTrace();
         }
     }
+
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean prepareStatements() {
         try {
@@ -47,6 +49,7 @@ public class DataSource {
             queryInfo = connection.prepareStatement("SELECT * FROM Info");
             updateItemStatus = connection.prepareStatement("UPDATE Items SET isOwned = ? WHERE ID = ?");
             insertNewItem = connection.prepareStatement(insertNewItemsStatement);
+            updateBgImage = connection.prepareStatement("UPDATE Info SET COLLECTIONBG = ?");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
@@ -172,6 +175,9 @@ public class DataSource {
             if (insertNewItem != null) {
                 insertNewItem.close();
             }
+            if (updateBgImage != null) {
+                updateBgImage.close();
+            }
             if (connection != null) {
                 connection.close();
             }
@@ -197,6 +203,17 @@ public class DataSource {
             }
         }
 
+
+    }
+
+    public void changeDbImage(File newImg) {
+
+        try {
+            updateBgImage.setBytes(1, covertFileToByteArray(newImg));
+            updateBgImage.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }

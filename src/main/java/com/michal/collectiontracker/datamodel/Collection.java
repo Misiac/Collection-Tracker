@@ -138,4 +138,15 @@ public class Collection {
         totalNumberOfItems++;
 
     }
+
+    public void updateBgImage(File newImg) {
+
+        thisDatasource.changeDbImage(newImg);
+        try {
+            this.backgroundImage = new Image(newImg.toURI().toURL().toExternalForm());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
