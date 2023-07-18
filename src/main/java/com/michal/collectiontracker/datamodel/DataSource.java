@@ -12,7 +12,7 @@ import java.sql.*;
 
 public class DataSource {
 
-    private final String CONNECTION_STRING_START = "jdbc:sqlite:";
+    private static final String CONNECTION_STRING_START = "jdbc:sqlite:";
     private final String CONNECTION_STRING;
     private Connection connection;
     private PreparedStatement queryItems;
@@ -229,6 +229,16 @@ public class DataSource {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    public static void resetStatus(String absolutePath) {
+        String query = "UPDATE Items SET isOwned = 0";
+        String connectionSting = CONNECTION_STRING_START + absolutePath;
+        try (Statement resetStatement = DriverManager.getConnection(connectionSting).createStatement()) {
+            resetStatement.execute(query);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

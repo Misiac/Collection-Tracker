@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -162,13 +163,20 @@ public class MainWindowController {
 
 
     }
-    private void resetStackPane(){
+
+    private void resetStackPane() {
         collectionNameLabel.setText("");
         menuButton.setVisible(false);
         collectedNumber.setText("");
     }
 
     private void shareCollection() {
+
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File targetDir = directoryChooser.showDialog(rootPane.getScene().getWindow());
+        var currentCol = collectionMap.get(currentCollectionName);
+        currentCol.copyCollection(targetDir);
+//        collectionMap.get(currentCollectionName).getDatasource().resetStatus();
     }
 
     private void handleUpdateBgImage() {

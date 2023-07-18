@@ -11,6 +11,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -24,6 +27,7 @@ public class Collection {
     private Image backgroundImage;
     private int totalNumberOfItems;
     private int numberOfItemsOwned;
+    private Path filePath;
     private static final File tempFile = new File(System.getProperty("java.io.tmpdir") + "collectiontemp.png");
 
     public String getCollectionName() {
@@ -50,6 +54,7 @@ public class Collection {
     public Collection(File collectionFile) throws SQLException {
         datasource = new DataSource(collectionFile.getAbsolutePath());
         ResultSet items = datasource.queryItems();
+        this.filePath = collectionFile.toPath();
 
         numberOfItemsOwned = 0;
 
@@ -84,6 +89,8 @@ public class Collection {
         datasource = new DataSource(name, directory, img);
 
         this.collectionName = name.getText();
+        String pathString = directory.getAbsolutePath() + File.separator + collectionName + ".sav"; // TODO: 18.07.2023
+        filePath = Paths.get(pathString);
         try {
             this.backgroundImage = new Image(img.toURI().toURL().toExternalForm());
         } catch (MalformedURLException e) {
@@ -157,5 +164,20 @@ public class Collection {
 
     public void unload() {
         this.datasource.close();
+    }
+
+    public boolean copyCollection(File targetDir) {
+        String filename = filePath.getFileName().toString().substring(0, filePath.getFileName().toString().indexOf("."));
+        String newFilename = filename + "_shareCopy.sav";
+        Path destination = Paths.get(targetDir.getAbsolutePath(), newFilename);
+
+
+        try {
+            Files.copy(filePath, destination);
+            DataSource.resetStatus(destination.toAbsolutePath().toString());
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
     }
 }
