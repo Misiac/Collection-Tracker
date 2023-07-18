@@ -19,7 +19,7 @@ import java.util.Map;
 public class Collection {
 
     private final Map<Integer, CollectionItem> collectionItems = new HashMap<>();
-    private final DataSource thisDatasource;
+    private final DataSource datasource;
     private String collectionName;
     private Image backgroundImage;
     private int totalNumberOfItems;
@@ -34,8 +34,8 @@ public class Collection {
         return backgroundImage;
     }
 
-    public DataSource getThisDatasource() {
-        return thisDatasource;
+    public DataSource getDatasource() {
+        return datasource;
     }
 
 
@@ -48,8 +48,8 @@ public class Collection {
     }
 
     public Collection(File collectionFile) throws SQLException {
-        thisDatasource = new DataSource(collectionFile.getAbsolutePath());
-        ResultSet items = thisDatasource.queryItems();
+        datasource = new DataSource(collectionFile.getAbsolutePath());
+        ResultSet items = datasource.queryItems();
 
         numberOfItemsOwned = 0;
 
@@ -72,7 +72,7 @@ public class Collection {
             collectionItems.put(newItem.getId(), newItem);
 
         }
-        ResultSet collectionInfo = thisDatasource.queryCollectionInfo();
+        ResultSet collectionInfo = datasource.queryCollectionInfo();
         this.collectionName = collectionInfo.getString(1);
         if (collectionInfo.getBinaryStream(2) != null) {
             this.backgroundImage = new Image(collectionInfo.getBinaryStream(2));
@@ -81,7 +81,7 @@ public class Collection {
 
     public Collection(TextField name, File directory, File img) {
 
-        thisDatasource = new DataSource(name, directory, img);
+        datasource = new DataSource(name, directory, img);
 
         this.collectionName = name.getText();
         try {
@@ -132,7 +132,7 @@ public class Collection {
         CollectionItem newCollectionItem;
 
         newCollectionItem = new CollectionItem(number, newName.getText(), resizedImage, false);
-        thisDatasource.addNewItemToDB(newName, newNumber, tempFile);
+        datasource.addNewItemToDB(newName, newNumber, tempFile);
 
         collectionItems.put(number, newCollectionItem);
         totalNumberOfItems++;
@@ -141,7 +141,7 @@ public class Collection {
 
     public void updateBgImage(File newImg) {
 
-        thisDatasource.changeDbImage(newImg);
+        datasource.changeDbImage(newImg);
         try {
             this.backgroundImage = new Image(newImg.toURI().toURL().toExternalForm());
         } catch (MalformedURLException e) {
@@ -152,6 +152,10 @@ public class Collection {
 
     public void updateCollectionName(String newName) {
         this.collectionName = newName;
-        this.thisDatasource.changeDbName(newName);
+        this.datasource.changeDbName(newName);
+    }
+
+    public void unload() {
+        this.datasource.close();
     }
 }

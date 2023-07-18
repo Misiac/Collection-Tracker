@@ -60,7 +60,7 @@ public class MainWindowController {
         buttonsGroup = new ToggleGroup();
         currentCollectionName = null;
         isCreationModeEnabled = false;
-        menuButton.setVisible(false);
+        resetStackPane();
 
         scrollPane.setStyle("-fx-background-color:transparent;");
         scrollPane.fitToHeightProperty().set(true);
@@ -146,7 +146,26 @@ public class MainWindowController {
 
     private void unloadCollection() {
 
+        var currentCol = collectionMap.get(currentCollectionName);
+        currentCol.unload();
+        collectionMap.remove(currentCollectionName);
 
+
+        flowPane.getChildren().clear();
+        checkBoxMap.clear();
+        leftVBox.getChildren().remove(buttonMap.get(currentCollectionName));
+
+        resetStackPane();
+
+        collectionImage.setImage(null);
+        currentCollectionName = null;
+
+
+    }
+    private void resetStackPane(){
+        collectionNameLabel.setText("");
+        menuButton.setVisible(false);
+        collectedNumber.setText("");
     }
 
     private void shareCollection() {
@@ -273,7 +292,7 @@ public class MainWindowController {
         boolean currentCheckBoxStatus = ((CheckBox) e.getSource()).isSelected();
 
         Collection currentCollection = collectionMap.get(currentCollectionName);
-        if (currentCollection.getThisDatasource().updateItemInfo(selectedItemID, currentCheckBoxStatus)) {
+        if (currentCollection.getDatasource().updateItemInfo(selectedItemID, currentCheckBoxStatus)) {
             currentCollection.getCollectionItems().get(selectedItemID).setOwned(currentCheckBoxStatus);
             currentCollection.updateOwnedStatus(currentCheckBoxStatus);
             calculateCollectedNumber(currentCollection);
@@ -291,7 +310,7 @@ public class MainWindowController {
     public void close() {
 
         for (Map.Entry<String, Collection> entry : collectionMap.entrySet()) {
-            entry.getValue().getThisDatasource().close();
+            entry.getValue().getDatasource().close();
 
         }
         Platform.exit();
@@ -356,7 +375,7 @@ public class MainWindowController {
 
                     Alert collectionExistsAlert = new Alert(Alert.AlertType.WARNING);
                     DialogPane dialog = collectionExistsAlert.getDialogPane();
-                    dialog.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm()); // TODO: 18.07.2023  check if this is necessary
+                    dialog.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
                     dialog.getStyleClass().add("alert");
 
 
