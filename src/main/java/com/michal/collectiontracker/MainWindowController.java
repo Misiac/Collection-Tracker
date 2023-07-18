@@ -99,6 +99,11 @@ public class MainWindowController {
         item4.setOnAction(e -> unloadCollection());
 
 
+        scrollPane.getContent().setOnScroll(scrollEvent -> {
+            double deltaY = scrollEvent.getDeltaY() * 0.005;
+            scrollPane.setVvalue(scrollPane.getVvalue() - deltaY);
+        });
+
         ContextMenu contextMenu = new ContextMenu(item1, item2, item3, item4);
 
         menuButton.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
@@ -177,7 +182,6 @@ public class MainWindowController {
         File targetDir = directoryChooser.showDialog(rootPane.getScene().getWindow());
         var currentCol = collectionMap.get(currentCollectionName);
         currentCol.copyCollection(targetDir);
-//        collectionMap.get(currentCollectionName).getDatasource().resetStatus();
     }
 
     private void handleUpdateBgImage() {
@@ -355,11 +359,9 @@ public class MainWindowController {
         Stage stage = (Stage) rootPane.getScene().getWindow();
         if (isCreationModeEnabled) {
             stage.setTitle("Collection Tracker - Creation mode");
-        }
-        else {
+        } else {
             stage.setTitle("Collection Tracker");
         }
-
     }
 
     @FXML
