@@ -16,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
@@ -350,6 +351,13 @@ public class MainWindowController {
         creationButton.setVisible(isCreationModeEnabled);
         if (currentCollectionName != null) {
             addButton.setVisible(isCreationModeEnabled);
+        }
+        Stage stage = (Stage) rootPane.getScene().getWindow();
+        if (isCreationModeEnabled) {
+            stage.setTitle("Collection Tracker - Creation mode");
+        }
+        else {
+            stage.setTitle("Collection Tracker");
         }
 
     }
