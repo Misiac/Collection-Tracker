@@ -125,7 +125,13 @@
 .itemName {
     -fx-font-weight: bold;
 }
+.context-menu{
+-fx-background-color: #2C2C2C;
 
+}
+.menu-item .label{
+-fx-text-fill: white;
+}
 .itemId {
     -fx-font-size: 12;
     -fx-padding: 0 0 0 7px;
