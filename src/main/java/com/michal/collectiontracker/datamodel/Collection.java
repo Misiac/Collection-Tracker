@@ -27,7 +27,7 @@ public class Collection {
     private Image backgroundImage;
     private int totalNumberOfItems;
     private int numberOfItemsOwned;
-    private Path filePath;
+    private final Path filePath;
     private static final File tempFile = new File(System.getProperty("java.io.tmpdir") + "collectiontemp.png");
 
     public String getCollectionName() {
@@ -89,7 +89,7 @@ public class Collection {
         datasource = new DataSource(name, directory, img);
 
         this.collectionName = name.getText();
-        String pathString = directory.getAbsolutePath() + File.separator + collectionName + ".sav"; // TODO: 18.07.2023
+        String pathString = directory.getAbsolutePath() + File.separator + collectionName + ".sav";
         filePath = Paths.get(pathString);
         try {
             this.backgroundImage = new Image(img.toURI().toURL().toExternalForm());
@@ -166,7 +166,7 @@ public class Collection {
         this.datasource.close();
     }
 
-    public boolean copyCollection(File targetDir) {
+    public void copyCollection(File targetDir) {
         String filename = filePath.getFileName().toString().substring(0, filePath.getFileName().toString().indexOf("."));
         String newFilename = filename + "_shareCopy.sav";
         Path destination = Paths.get(targetDir.getAbsolutePath(), newFilename);
@@ -176,8 +176,7 @@ public class Collection {
             Files.copy(filePath, destination);
             DataSource.resetStatus(destination.toAbsolutePath().toString());
         } catch (IOException e) {
-            return false;
+            throw new RuntimeException(e);
         }
-        return true;
     }
 }
