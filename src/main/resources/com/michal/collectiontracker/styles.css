@@ -113,14 +113,13 @@
 .dialog-pane .button:hover {
     -fx-background-color: #454545;
 }
-
-.alert {
-    -fx-background-color: #383838;
-    -fx-text-fill: white;
-}
-
 .alert:header *.header-panel {
     -fx-background-color: #383838;
+}
+
+.alert {
+    -fx-background-color: #121212;
+    -fx-text-fill: white;
 }
 
 .itemName {
@@ -159,7 +158,6 @@
 }
 
 .scroll-bar:vertical {
-    -fx-background-color: #959595;
     -fx-background-color: #171717;
     -fx-background-insets: 0, 0, 0, 2;
 }

@@ -21,6 +21,7 @@ public class DataSource {
     private PreparedStatement updateItemStatus;
     private PreparedStatement insertIntoItemsCreation;
     private PreparedStatement insertNewItem;
+    private PreparedStatement updateDbName;
 
 
     public DataSource(String absolutePath) {
@@ -50,6 +51,7 @@ public class DataSource {
             updateItemStatus = connection.prepareStatement("UPDATE Items SET isOwned = ? WHERE ID = ?");
             insertNewItem = connection.prepareStatement(insertNewItemsStatement);
             updateBgImage = connection.prepareStatement("UPDATE Info SET COLLECTIONBG = ?");
+            updateDbName = connection.prepareStatement("UPDATE Info SET COLLECTIONNAME = ?");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
@@ -178,6 +180,9 @@ public class DataSource {
             if (updateBgImage != null) {
                 updateBgImage.close();
             }
+            if (updateDbName != null) {
+                updateDbName.close();
+            }
             if (connection != null) {
                 connection.close();
             }
@@ -211,6 +216,16 @@ public class DataSource {
         try {
             updateBgImage.setBytes(1, covertFileToByteArray(newImg));
             updateBgImage.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void changeDbName(String newName) {
+        try {
+            updateDbName.setString(1, newName);
+            updateDbName.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

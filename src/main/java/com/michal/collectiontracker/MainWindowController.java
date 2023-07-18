@@ -50,6 +50,7 @@ public class MainWindowController {
     Button addButton;
     ToggleGroup buttonsGroup;
     private final Map<String, Collection> collectionMap = new HashMap<>();
+    private final Map<String, ToggleButton> buttonMap = new HashMap<>();
     private final Map<CheckBox, Integer> checkBoxMap = new HashMap<>();
     private String currentCollectionName;
     boolean isCreationModeEnabled;
@@ -87,7 +88,7 @@ public class MainWindowController {
         item1.setOnAction(e -> shareCollection());
 
         MenuItem item2 = new MenuItem("Change name");
-        item2.setOnAction(e -> unloadCollection());
+        item2.setOnAction(e -> changeName());
 
         MenuItem item3 = new MenuItem("Change collection bg image");
         item3.setOnAction(e -> handleUpdateBgImage());
@@ -96,20 +97,56 @@ public class MainWindowController {
         item4.setOnAction(e -> unloadCollection());
 
 
-
         ContextMenu contextMenu = new ContextMenu(item1, item2, item3, item4);
 
         menuButton.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
             if (event.isPrimaryButtonDown()) {
                 contextMenu.show(menuButton, event.getScreenX(), event.getScreenY());
             }
-
         });
+    }
+
+    private void changeName() {
+
+        TextInputDialog tiDialog = new TextInputDialog();
+        tiDialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+        tiDialog.getDialogPane().getStyleClass().add("alert");
+
+        tiDialog.setTitle("Change collection name");
+        tiDialog.setHeaderText("Enter new name \n(Filename won't change)");
+        tiDialog.setContentText("Name:");
+        tiDialog.getEditor().setText(currentCollectionName);
+
+        Optional<String> result = tiDialog.showAndWait();
+        if (result.isPresent()) {
+            String newName = result.get();
+            if (!newName.equals("")) {
+                var currentCollection = collectionMap.get(currentCollectionName);
+                String oldName = currentCollection.getCollectionName();
+
+                var currentColBtn = buttonMap.get(oldName);
+                currentColBtn.setText(newName);
+                buttonMap.remove(oldName);
+                buttonMap.put(newName, currentColBtn);
+
+                currentCollection.updateCollectionName(newName);
 
 
+                collectionMap.remove(oldName);
+                collectionMap.put(newName, currentCollection);
+
+                collectionNameLabel.setText(newName);
+
+                currentCollectionName = newName;
+
+            }
+
+        }
     }
 
     private void unloadCollection() {
+
+
     }
 
     private void shareCollection() {
@@ -319,7 +356,7 @@ public class MainWindowController {
 
                     Alert collectionExistsAlert = new Alert(Alert.AlertType.WARNING);
                     DialogPane dialog = collectionExistsAlert.getDialogPane();
-                    dialog.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+                    dialog.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm()); // TODO: 18.07.2023  check if this is necessary
                     dialog.getStyleClass().add("alert");
 
 
@@ -405,8 +442,9 @@ public class MainWindowController {
                 button.setPrefHeight(55);
                 button.setWrapText(true);
                 button.setToggleGroup(buttonsGroup);
-
                 button.setOnAction(this::handleCollectionChange);
+
+                buttonMap.put(collection.getCollectionName(), button);
                 leftVBox.getChildren().add(button);
             } else {
                 Alert alreadyPresentAlert = new Alert(Alert.AlertType.WARNING);

@@ -149,4 +149,9 @@ public class Collection {
         }
 
     }
+
+    public void updateCollectionName(String newName) {
+        this.collectionName = newName;
+        this.thisDatasource.changeDbName(newName);
+    }
 }
