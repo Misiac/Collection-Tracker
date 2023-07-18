@@ -61,6 +61,7 @@ public class MainWindowController {
         buttonsGroup = new ToggleGroup();
         currentCollectionName = null;
         isCreationModeEnabled = false;
+        menuButton.setVisible(false);
 
         scrollPane.setStyle("-fx-background-color:transparent;");
         scrollPane.fitToHeightProperty().set(true);
@@ -84,15 +85,35 @@ public class MainWindowController {
         addButton.setVisible(false);
 
 
-        MenuItem item1 = new MenuItem("test");
-        ContextMenu contextMenu = new ContextMenu(item1);
+        MenuItem item1 = new MenuItem("Share non-selected collection");
+        item1.setOnAction(e -> shareCollection());
+
+        MenuItem item2 = new MenuItem("Change collection bg image");
+        item2.setOnAction(e -> updateBgImage());
+
+        MenuItem item3 = new MenuItem("Unload collection");
+        item3.setOnAction(e -> unloadCollection());
+        
+        ContextMenu contextMenu = new ContextMenu(item1, item2, item3);
 
         menuButton.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
             if (event.isPrimaryButtonDown()) {
                 contextMenu.show(menuButton, event.getScreenX(), event.getScreenY());
             }
+
         });
 
+
+    }
+
+    private void unloadCollection() {
+    }
+
+    private void shareCollection() {
+    }
+
+    private void updateBgImage() {
+        
 
     }
 
@@ -185,7 +206,7 @@ public class MainWindowController {
             flowPane.getChildren().add(gridPane);
         }
 
-
+        menuButton.setVisible(true);
         flowPane.getChildren().add(addButton);
         if (isCreationModeEnabled) {
             addButton.setVisible(true);
