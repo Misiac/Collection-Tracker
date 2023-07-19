@@ -57,7 +57,6 @@ public class MainWindowController {
     private String currentCollectionName;
     boolean isCreationModeEnabled;
 
-
     public void initialize() {
         buttonsGroup = new ToggleGroup();
         currentCollectionName = null;
@@ -94,7 +93,6 @@ public class MainWindowController {
 
         MenuItem item4 = new MenuItem("Unload collection");
         item4.setOnAction(e -> unloadCollection());
-
 
         scrollPane.getContent().setOnScroll(scrollEvent -> {
             double deltaY = scrollEvent.getDeltaY() * 0.005;
@@ -141,9 +139,7 @@ public class MainWindowController {
                 collectionNameLabel.setText(newName);
 
                 currentCollectionName = newName;
-
             }
-
         }
     }
 
@@ -180,11 +176,7 @@ public class MainWindowController {
 
     private void handleUpdateBgImage() {
 
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Image", "*.jpg", "*.png")
-        );
-        File newImg = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
+        File newImg = showCustomFileChooser(FileChooserType.IMG);
 
         if (newImg != null) {
             var currentCol = collectionMap.get(currentCollectionName);
@@ -194,13 +186,9 @@ public class MainWindowController {
             collectionImage.setImage(currentCol.getBackgroundImage());
         }
     }
-
     @FXML
     public void chooseCollectionFile() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("CT save files", "*.sav"));
-        File file = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
+        File file = showCustomFileChooser(FileChooserType.SAV);
         if (file == null) return;
         try {
             Collection newCollection = new Collection(file);
@@ -211,7 +199,6 @@ public class MainWindowController {
             e.printStackTrace();
         }
     }
-
     private void handleCollectionChange(ActionEvent actionEvent) {
         String selection = ((ToggleButton) actionEvent.getSource()).getText();
         Collection selectedCollection = collectionMap.get(selection);
@@ -262,9 +249,15 @@ public class MainWindowController {
 
             MenuItem item1 = new MenuItem("Change number");
             item1.setOnAction(event -> handleNumberChange(itemID));
+
             MenuItem item2 = new MenuItem("Change name");
+            item2.setOnAction(event -> handleNameChange(itemID, itemName));
+
             MenuItem item3 = new MenuItem("Change image");
+            item3.setOnAction(event -> handleImageChange(itemID, imageView));
+
             MenuItem item4 = new MenuItem("Remove item");
+            item4.setOnAction(event -> handleRemoveItem(itemID, gridPane));
 
             ContextMenu contextMenu = new ContextMenu(item1, item2, item3, item4);
 
@@ -295,21 +288,15 @@ public class MainWindowController {
         currentCollectionName = collection.getCollectionName();
     }
 
-    private void showCustomAlert(Alert.AlertType type, String title, String headerText, String contentText) {
-        Alert alert = new Alert(type);
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+    private void handleRemoveItem(Label itemID, GridPane gridPane) {
+    }
 
-        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-        alertStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("img/icon.png"))));
+    private void handleImageChange(Label itemID, ImageView imageView) {
 
-        dialogPane.getStyleClass().add("alert");
+    }
 
-        alert.setTitle(title);
-        alert.setHeaderText(headerText);
-        alert.setContentText(contentText);
+    private void handleNameChange(Label itemID, Label itemName) {
 
-        alert.showAndWait();
     }
 
     private void handleNumberChange(Label oldNumberLabel) {
@@ -369,7 +356,6 @@ public class MainWindowController {
             }
         }
     }
-
     private void handleCheckBoxClick(ActionEvent e) {
         int selectedItemID = checkBoxMap.get((CheckBox) e.getSource());
         boolean currentCheckBoxStatus = ((CheckBox) e.getSource()).isSelected();
@@ -392,7 +378,6 @@ public class MainWindowController {
 
         for (Map.Entry<String, Collection> entry : collectionMap.entrySet()) {
             entry.getValue().getDatasource().close();
-
         }
         Platform.exit();
     }
@@ -428,7 +413,6 @@ public class MainWindowController {
             stage.setTitle("Collection Tracker");
         }
     }
-
     @FXML
     public void showCreationDialog() {
         Dialog<ButtonType> creationDialog = new Dialog<>();
@@ -467,7 +451,6 @@ public class MainWindowController {
                 if (result.get().getButtonData().isCancelButton()) return;
             }
 
-
         } while (!controller.isEverythingSet() || Files.exists(Objects.requireNonNull(futureCollectionPath)));
 
         createNewCollection(
@@ -476,7 +459,6 @@ public class MainWindowController {
                 controller.getChoosenImg()
         );
     }
-
     private void showAddItemDialog(ActionEvent e) {
         Dialog<ButtonType> addItemDialog = new Dialog<>();
         addItemDialog.initOwner(rootPane.getScene().getWindow());
@@ -510,7 +492,6 @@ public class MainWindowController {
                 controller.getImgFile());
         renderCollection(currentCollection);
     }
-
     private void createNewCollection(TextField newName, File choosenDirectory, File choosenImg) {
         Collection newCollection = new Collection(newName, choosenDirectory, choosenImg);
         loadCollection(newCollection);
@@ -540,5 +521,39 @@ public class MainWindowController {
             }
         } catch (Exception ignored) {
         }
+    }
+
+    private void showCustomAlert(Alert.AlertType type, String title, String headerText, String contentText) {
+        Alert alert = new Alert(type);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+
+        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        alertStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("img/icon.png"))));
+
+        dialogPane.getStyleClass().add("alert");
+
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+
+        alert.showAndWait();
+    }
+
+    enum FileChooserType {
+        SAV,
+        IMG
+    }
+
+    private File showCustomFileChooser(FileChooserType type) {
+        FileChooser fileChooser = new FileChooser();
+        if (type == FileChooserType.IMG) {
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Image", "*.jpg", "*.png"));
+        } else if (type == FileChooserType.SAV) {
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("CT save files", "*.sav"));
+        }
+        return fileChooser.showOpenDialog(rootPane.getScene().getWindow());
     }
 }
