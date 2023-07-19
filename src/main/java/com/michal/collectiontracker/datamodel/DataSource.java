@@ -23,6 +23,7 @@ public class DataSource {
     private PreparedStatement insertIntoItemsCreation;
     private PreparedStatement insertNewItem;
     private PreparedStatement updateDbName;
+    private PreparedStatement changeItemImage;
 
 
     public DataSource(String absolutePath) {
@@ -45,15 +46,15 @@ public class DataSource {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean prepareStatements() {
         try {
-            String insertNewItemsStatement = "INSERT INTO Items VALUES (?, ?, ?,0)";
 
             queryItems = connection.prepareStatement("SELECT * FROM Items");
             queryInfo = connection.prepareStatement("SELECT * FROM Info");
             updateItemStatus = connection.prepareStatement("UPDATE Items SET isOwned = ? WHERE ID = ?");
-            insertNewItem = connection.prepareStatement(insertNewItemsStatement);
+            insertNewItem = connection.prepareStatement("INSERT INTO Items VALUES (?, ?, ?,0)");
             updateBgImage = connection.prepareStatement("UPDATE Info SET COLLECTIONBG = ?");
             updateDbName = connection.prepareStatement("UPDATE Info SET COLLECTIONNAME = ?");
             changeNumber = connection.prepareStatement("UPDATE Items SET ID = ? WHERE ID = ?");
+            changeItemImage = connection.prepareStatement("UPDATE Items SET PHOTO = ? WHERE ID = ?");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
@@ -185,6 +186,9 @@ public class DataSource {
             if (updateDbName != null) {
                 updateDbName.close();
             }
+            if (changeItemImage != null) {
+                changeItemImage.close();
+            }
             if (changeNumber != null) {
                 changeNumber.close();
             }
@@ -213,8 +217,6 @@ public class DataSource {
                 System.out.println(e.getMessage());
             }
         }
-
-
     }
 
     public void changeDbImage(File newImg) {
@@ -225,7 +227,6 @@ public class DataSource {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public void changeDbName(String newName) {
@@ -238,6 +239,7 @@ public class DataSource {
     }
 
     public static void resetStatus(String absolutePath) {
+
         String query = "UPDATE Items SET isOwned = 0";
         String connectionSting = CONNECTION_STRING_START + absolutePath;
         try (Statement resetStatement = DriverManager.getConnection(connectionSting).createStatement()) {
@@ -260,5 +262,18 @@ public class DataSource {
         }
         return true;
 
+    }
+
+    public boolean changeItemImage(int id, File tempFile) {
+
+        try {
+            changeItemImage.setBytes(1, covertFileToByteArray(tempFile));
+            changeItemImage.setInt(2, id);
+            changeItemImage.execute();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

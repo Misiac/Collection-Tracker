@@ -186,6 +186,7 @@ public class MainWindowController {
             collectionImage.setImage(currentCol.getBackgroundImage());
         }
     }
+
     @FXML
     public void chooseCollectionFile() {
         File file = showCustomFileChooser(FileChooserType.SAV);
@@ -199,6 +200,7 @@ public class MainWindowController {
             e.printStackTrace();
         }
     }
+
     private void handleCollectionChange(ActionEvent actionEvent) {
         String selection = ((ToggleButton) actionEvent.getSource()).getText();
         Collection selectedCollection = collectionMap.get(selection);
@@ -291,11 +293,23 @@ public class MainWindowController {
     private void handleRemoveItem(Label itemID, GridPane gridPane) {
     }
 
-    private void handleImageChange(Label itemID, ImageView imageView) {
+    private void handleImageChange(Label itemIdLabel, ImageView imageView) {
 
+        File img = showCustomFileChooser(FileChooserType.IMG);
+        if (img != null) {
+
+            var currentCollection = collectionMap.get(currentCollectionName);
+            String labelText = itemIdLabel.getText();
+            int itemId = Integer.parseInt(labelText.substring(labelText.indexOf(":") + 2));
+            Image newImage = currentCollection.changeImage(itemId, img);
+            if (newImage != null) {
+                imageView.setImage(newImage);
+            }
+        }
     }
 
     private void handleNameChange(Label itemID, Label itemName) {
+
 
     }
 
@@ -356,6 +370,7 @@ public class MainWindowController {
             }
         }
     }
+
     private void handleCheckBoxClick(ActionEvent e) {
         int selectedItemID = checkBoxMap.get((CheckBox) e.getSource());
         boolean currentCheckBoxStatus = ((CheckBox) e.getSource()).isSelected();
@@ -413,6 +428,7 @@ public class MainWindowController {
             stage.setTitle("Collection Tracker");
         }
     }
+
     @FXML
     public void showCreationDialog() {
         Dialog<ButtonType> creationDialog = new Dialog<>();
@@ -459,6 +475,7 @@ public class MainWindowController {
                 controller.getChoosenImg()
         );
     }
+
     private void showAddItemDialog(ActionEvent e) {
         Dialog<ButtonType> addItemDialog = new Dialog<>();
         addItemDialog.initOwner(rootPane.getScene().getWindow());
@@ -492,6 +509,7 @@ public class MainWindowController {
                 controller.getImgFile());
         renderCollection(currentCollection);
     }
+
     private void createNewCollection(TextField newName, File choosenDirectory, File choosenImg) {
         Collection newCollection = new Collection(newName, choosenDirectory, choosenImg);
         loadCollection(newCollection);

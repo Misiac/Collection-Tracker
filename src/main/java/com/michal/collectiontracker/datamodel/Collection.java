@@ -98,9 +98,7 @@ public class Collection {
         }
         numberOfItemsOwned = 0;
         totalNumberOfItems = 0;
-
     }
-
 
     public Map<Integer, CollectionItem> getCollectionItems() {
         return collectionItems;
@@ -128,7 +126,7 @@ public class Collection {
 
     public void addItem(TextField newName, TextField newNumber, File imgFile) {
 
-         Image resizedImage = resizeAndSaveImageFromFile(imgFile);
+        Image resizedImage = resizeAndSaveImageFromFile(imgFile);
 
         int number = Integer.parseInt(newNumber.getText());
         CollectionItem newCollectionItem;
@@ -148,7 +146,6 @@ public class Collection {
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public void updateCollectionName(String newName) {
@@ -164,7 +161,6 @@ public class Collection {
         String filename = filePath.getFileName().toString().substring(0, filePath.getFileName().toString().indexOf("."));
         String newFilename = filename + "_shareCopy.sav";
         Path destination = Paths.get(targetDir.getAbsolutePath(), newFilename);
-
 
         try {
             Files.copy(filePath, destination);
@@ -197,7 +193,16 @@ public class Collection {
         return false;
     }
 
-    public void changeImage(int i, File img) {
+    public Image changeImage(int id, File img) {
+
+        Image resizedImage = resizeAndSaveImageFromFile(img);
+        boolean methodResult = datasource.changeItemImage(id, tempFile);
+        if (methodResult) {
+            CollectionItem collectionItem = collectionItems.get(id);
+            collectionItem.setImage(resizedImage);
+            return resizedImage;
+        }
+        return null;
 
     }
 }
