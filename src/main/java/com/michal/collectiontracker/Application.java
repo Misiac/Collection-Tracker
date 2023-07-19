@@ -27,9 +27,7 @@ public class Application extends javafx.application.Application {
         stage.setResizable(false);
         //^ maybe someday?
 
-
     }
-
     public static void main(String[] args) {
         launch();
     }

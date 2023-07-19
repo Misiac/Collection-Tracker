@@ -308,10 +308,13 @@ public class MainWindowController {
     }
 
     private void showCustomAlert(Alert.AlertType type, String title, String headerText, String contentText) {
-
         Alert alert = new Alert(type);
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+
+        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        alertStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("img/icon.png"))));
+
         dialogPane.getStyleClass().add("alert");
 
         alert.setTitle(title);
