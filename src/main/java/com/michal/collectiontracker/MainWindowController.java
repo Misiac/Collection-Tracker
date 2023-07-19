@@ -307,6 +307,19 @@ public class MainWindowController {
         currentCollectionName = collection.getCollectionName();
     }
 
+    private void showCustomAlert(Alert.AlertType type, String title, String headerText, String contentText) {
+
+        Alert alert = new Alert(type);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+        dialogPane.getStyleClass().add("alert");
+
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+
+        alert.showAndWait();
+    }
 
     private void handleNumberChange(Label oldNumberLabel) {
 
@@ -332,15 +345,11 @@ public class MainWindowController {
                     if (methodResult) {
                         oldNumberLabel.setText("Number: " + newNumber);
                     } else {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-
-                        DialogPane dialog = alert.getDialogPane();
-                        dialog.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
-                        alert.setTitle("Error");
-                        alert.setHeaderText("Can't change number");
-                        alert.setContentText("Provided number is not valid");
-
-                        alert.showAndWait();
+                        showCustomAlert(Alert.AlertType.ERROR,
+                                "Error",
+                                "Can't change number",
+                                "Provided number is not valid"
+                        );
                     }
                 } catch (NumberFormatException e) {
                     return; // TODO: 19.07.2023
@@ -394,7 +403,6 @@ public class MainWindowController {
         aboutDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
 
         aboutDialog.showAndWait();
-
     }
 
 
@@ -440,17 +448,11 @@ public class MainWindowController {
                         + File.separator + controller.newName.getText() + ".sav");
                 if (Files.exists(futureCollectionPath) && controller.isEverythingSet()) {
 
-                    Alert collectionExistsAlert = new Alert(Alert.AlertType.WARNING);
-                    DialogPane dialog = collectionExistsAlert.getDialogPane();
-                    dialog.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
-                    dialog.getStyleClass().add("alert");
-
-
-                    collectionExistsAlert.setTitle("Collection exists");
-                    collectionExistsAlert.setHeaderText("Collection with the choosen path and name already exists");
-                    collectionExistsAlert.setContentText("Choose another name or path");
-
-                    collectionExistsAlert.showAndWait();
+                    showCustomAlert(Alert.AlertType.WARNING,
+                            "Collection exists",
+                            "Collection with the choosen path and name already exists",
+                            "Choose another name or path"
+                    );
                 }
 
             }
@@ -533,17 +535,10 @@ public class MainWindowController {
                 buttonMap.put(collection.getCollectionName(), button);
                 leftVBox.getChildren().add(button);
             } else {
-                Alert alreadyPresentAlert = new Alert(Alert.AlertType.WARNING);
-                DialogPane dialog = alreadyPresentAlert.getDialogPane();
-                dialog.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
-                dialog.getStyleClass().add("alert");
-
-
-                alreadyPresentAlert.setTitle("Already loaded");
-                alreadyPresentAlert.setHeaderText("Selected collection is already loaded");
-                alreadyPresentAlert.setContentText("Choose another file");
-
-                alreadyPresentAlert.showAndWait();
+                showCustomAlert(Alert.AlertType.WARNING,
+                        "Already loaded",
+                        "Selected collection is already loaded",
+                        "Choose another file");
             }
         } catch (Exception ignored) {
 
