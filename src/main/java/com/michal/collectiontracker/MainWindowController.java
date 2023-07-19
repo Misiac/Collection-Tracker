@@ -110,36 +110,30 @@ public class MainWindowController {
 
     private void changeName() {
 
-        TextInputDialog tiDialog = new TextInputDialog();
-        tiDialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
-        tiDialog.getDialogPane().getStyleClass().add("alert");
+        String result = showCustomTextInputDialog(
+                "Change collection name",
+                "Enter new name \n(Filename won't change)",
+                "Name:",
+                currentCollectionName
+        );
 
-        tiDialog.setTitle("Change collection name");
-        tiDialog.setHeaderText("Enter new name \n(Filename won't change)");
-        tiDialog.setContentText("Name:");
-        tiDialog.getEditor().setText(currentCollectionName);
+        if (result != null && !result.equals("")) {
+            var currentCollection = collectionMap.get(currentCollectionName);
+            String oldName = currentCollection.getCollectionName();
 
-        Optional<String> result = tiDialog.showAndWait();
-        if (result.isPresent()) {
-            String newName = result.get();
-            if (!newName.equals("")) {
-                var currentCollection = collectionMap.get(currentCollectionName);
-                String oldName = currentCollection.getCollectionName();
+            var currentColBtn = buttonMap.get(oldName);
+            currentColBtn.setText(result);
+            buttonMap.remove(oldName);
+            buttonMap.put(result, currentColBtn);
 
-                var currentColBtn = buttonMap.get(oldName);
-                currentColBtn.setText(newName);
-                buttonMap.remove(oldName);
-                buttonMap.put(newName, currentColBtn);
+            currentCollection.updateCollectionName(result);
 
-                currentCollection.updateCollectionName(newName);
+            collectionMap.remove(oldName);
+            collectionMap.put(result, currentCollection);
 
-                collectionMap.remove(oldName);
-                collectionMap.put(newName, currentCollection);
+            collectionNameLabel.setText(result);
 
-                collectionNameLabel.setText(newName);
-
-                currentCollectionName = newName;
-            }
+            currentCollectionName = result;
         }
     }
 
@@ -573,5 +567,23 @@ public class MainWindowController {
                     new FileChooser.ExtensionFilter("CT save files", "*.sav"));
         }
         return fileChooser.showOpenDialog(rootPane.getScene().getWindow());
+    }
+
+    private String showCustomTextInputDialog(String title, String header, String contentText, String setText) {
+        TextInputDialog tiDialog = new TextInputDialog();
+        tiDialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+        tiDialog.getDialogPane().getStyleClass().add("alert");
+
+        Stage dialogStage = (Stage) tiDialog.getDialogPane().getScene().getWindow();
+        dialogStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("img/icon.png"))));
+
+        tiDialog.setTitle(title);
+        tiDialog.setHeaderText(header);
+        tiDialog.setContentText(contentText);
+        if (setText != null) {
+            tiDialog.getEditor().setText(setText);
+        }
+        Optional<String> result = tiDialog.showAndWait();
+        return result.orElse(null);
     }
 }
