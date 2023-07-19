@@ -76,15 +76,12 @@ public class MainWindowController {
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream("img/plus.png")))));
         addButton.setOnAction(this::showAddItemDialog);
 
-
         StackPane.setAlignment(menuButton, Pos.TOP_RIGHT);
         StackPane.setAlignment(collectionNameLabel, Pos.BOTTOM_LEFT);
         StackPane.setAlignment(collectedNumber, Pos.BOTTOM_RIGHT);
 
-
         creationButton.setVisible(false);
         addButton.setVisible(false);
-
 
         MenuItem item1 = new MenuItem("Share non-selected collection");
         item1.setOnAction(e -> shareCollection());
@@ -138,7 +135,6 @@ public class MainWindowController {
 
                 currentCollection.updateCollectionName(newName);
 
-
                 collectionMap.remove(oldName);
                 collectionMap.put(newName, currentCollection);
 
@@ -164,7 +160,6 @@ public class MainWindowController {
 
         collectionImage.setImage(null);
         currentCollectionName = null;
-
     }
 
     private void resetStackPane() {
@@ -181,13 +176,11 @@ public class MainWindowController {
         if (targetDir != null) {
             currentCol.copyCollection(targetDir);
         }
-
     }
 
     private void handleUpdateBgImage() {
 
         FileChooser fileChooser = new FileChooser();
-
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Image", "*.jpg", "*.png")
         );
@@ -200,7 +193,6 @@ public class MainWindowController {
             collectionImage.setFitWidth(stackPane.getMaxWidth());
             collectionImage.setImage(currentCol.getBackgroundImage());
         }
-
     }
 
     @FXML
@@ -211,7 +203,6 @@ public class MainWindowController {
         File file = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
         if (file == null) return;
         try {
-
             Collection newCollection = new Collection(file);
             loadCollection(newCollection);
 
@@ -219,7 +210,6 @@ public class MainWindowController {
             System.out.println("File not loaded properly");
             e.printStackTrace();
         }
-
     }
 
     private void handleCollectionChange(ActionEvent actionEvent) {
@@ -231,7 +221,6 @@ public class MainWindowController {
         } else {
             ((ToggleButton) actionEvent.getSource()).setSelected(true);
         }
-
     }
 
     public void renderCollection(Collection collection) {
@@ -278,7 +267,6 @@ public class MainWindowController {
             MenuItem item4 = new MenuItem("Remove item");
 
             ContextMenu contextMenu = new ContextMenu(item1, item2, item3, item4);
-
 
             gridPane.setOnContextMenuRequested(event -> contextMenu.show(gridPane, event.getScreenX(), event.getScreenY()));
 
@@ -392,8 +380,6 @@ public class MainWindowController {
             currentCollection.updateOwnedStatus(currentCheckBoxStatus);
             calculateCollectedNumber(currentCollection);
         }
-
-
     }
 
     private void calculateCollectedNumber(Collection collection) {
@@ -425,10 +411,8 @@ public class MainWindowController {
             System.out.println(e.getMessage());
         }
         aboutDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-
         aboutDialog.showAndWait();
     }
-
 
     @FXML
     public void handleCreationModeSwitch() {
@@ -478,7 +462,6 @@ public class MainWindowController {
                             "Choose another name or path"
                     );
                 }
-
             }
             if (result.isPresent()) {
                 if (result.get().getButtonData().isCancelButton()) return;
@@ -487,14 +470,11 @@ public class MainWindowController {
 
         } while (!controller.isEverythingSet() || Files.exists(Objects.requireNonNull(futureCollectionPath)));
 
-
         createNewCollection(
                 controller.getNewName(),
                 controller.getChoosenDirectory(),
                 controller.getChoosenImg()
         );
-
-
     }
 
     private void showAddItemDialog(ActionEvent e) {
@@ -521,8 +501,6 @@ public class MainWindowController {
             if (result.isPresent()) {
                 if (result.get().getButtonData().isCancelButton()) return;
             }
-
-
         } while (!controller.isInputOkay());
 
         Collection currentCollection = collectionMap.get(currentCollectionName);
@@ -531,14 +509,11 @@ public class MainWindowController {
                 controller.getNewNumber(),
                 controller.getImgFile());
         renderCollection(currentCollection);
-
-
     }
 
     private void createNewCollection(TextField newName, File choosenDirectory, File choosenImg) {
         Collection newCollection = new Collection(newName, choosenDirectory, choosenImg);
         loadCollection(newCollection);
-
     }
 
     private void loadCollection(Collection collection) {
@@ -546,7 +521,6 @@ public class MainWindowController {
             if (!collectionMap.containsKey(collection.getCollectionName())) {
 
                 collectionMap.put(collection.getCollectionName(), collection);
-
 
                 ToggleButton button = new ToggleButton(collection.getCollectionName());
                 button.setAlignment(Pos.BOTTOM_LEFT);
@@ -565,7 +539,6 @@ public class MainWindowController {
                         "Choose another file");
             }
         } catch (Exception ignored) {
-
         }
     }
 }
