@@ -179,4 +179,27 @@ public class Collection {
             throw new RuntimeException(e);
         }
     }
+
+    public boolean changeNumber(int oldNumber, int newNumber) {
+
+        boolean alreadyExist = false;
+        Integer boxedNewNumber = newNumber;
+        for (Integer itemId : collectionItems.keySet()) {
+            if (itemId.equals(boxedNewNumber)) {
+                alreadyExist = true;
+                break;
+            }
+        }
+        if (!alreadyExist) {
+            boolean methodResult = datasource.updateNumber(oldNumber, newNumber);
+            if (methodResult) {
+                var changedItem = collectionItems.get(oldNumber);
+                changedItem.setId(newNumber);
+                collectionItems.remove(oldNumber);
+                collectionItems.put(newNumber, changedItem);
+                return true;
+            }
+            return false;
+        } else return false;
+    }
 }

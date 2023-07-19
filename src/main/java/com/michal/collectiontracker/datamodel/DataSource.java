@@ -19,6 +19,7 @@ public class DataSource {
     private PreparedStatement updateBgImage;
     private PreparedStatement queryInfo;
     private PreparedStatement updateItemStatus;
+    private PreparedStatement changeNumber;
     private PreparedStatement insertIntoItemsCreation;
     private PreparedStatement insertNewItem;
     private PreparedStatement updateDbName;
@@ -52,6 +53,7 @@ public class DataSource {
             insertNewItem = connection.prepareStatement(insertNewItemsStatement);
             updateBgImage = connection.prepareStatement("UPDATE Info SET COLLECTIONBG = ?");
             updateDbName = connection.prepareStatement("UPDATE Info SET COLLECTIONNAME = ?");
+            changeNumber = connection.prepareStatement("UPDATE Items SET ID = ? WHERE ID = ?");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
@@ -183,9 +185,13 @@ public class DataSource {
             if (updateDbName != null) {
                 updateDbName.close();
             }
+            if (changeNumber != null) {
+                changeNumber.close();
+            }
             if (connection != null) {
                 connection.close();
             }
+
 
         } catch (SQLException e) {
             System.out.println("Couldn't close the db " + e.getMessage());
@@ -238,7 +244,21 @@ public class DataSource {
             resetStatement.execute(query);
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+    }
+
+    public boolean updateNumber(int oldNumber, int newNumber) {
+
+        try {
+            changeNumber.setInt(1, newNumber);
+            changeNumber.setInt(2, oldNumber);
+            changeNumber.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+
     }
 }

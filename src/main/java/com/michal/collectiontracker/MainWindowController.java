@@ -157,16 +157,13 @@ public class MainWindowController {
         currentCol.unload();
         collectionMap.remove(currentCollectionName);
 
-
         flowPane.getChildren().clear();
         checkBoxMap.clear();
         leftVBox.getChildren().remove(buttonMap.get(currentCollectionName));
-
         resetStackPane();
 
         collectionImage.setImage(null);
         currentCollectionName = null;
-
 
     }
 
@@ -235,7 +232,6 @@ public class MainWindowController {
             ((ToggleButton) actionEvent.getSource()).setSelected(true);
         }
 
-
     }
 
     public void renderCollection(Collection collection) {
@@ -275,9 +271,19 @@ public class MainWindowController {
             gridPane.setPrefHeight(150);
             gridPane.setMaxHeight(150);
 
+            MenuItem item1 = new MenuItem("Change number");
+            item1.setOnAction(event -> handleNumberChange(itemID));
+            MenuItem item2 = new MenuItem("Change name");
+            MenuItem item3 = new MenuItem("Change image");
+            MenuItem item4 = new MenuItem("Remove item");
+
+            ContextMenu contextMenu = new ContextMenu(item1, item2, item3, item4);
+
+
+            gridPane.setOnContextMenuRequested(event -> contextMenu.show(gridPane, event.getScreenX(), event.getScreenY()));
+
             imageView.setFitHeight(124);
             imageView.setFitWidth(127);
-
 
             checkBox.setPadding(new Insets(5));
             checkBox.setOnAction(this::handleCheckBoxClick);
@@ -287,10 +293,8 @@ public class MainWindowController {
             gridPane.add(itemID, 0, 2, 1, 1);
             gridPane.add(checkBox, 1, 2, 1, 1);
 
-
             GridPane.setHalignment(itemName, HPos.CENTER);
             GridPane.setHalignment(checkBox, HPos.RIGHT);
-
 
             flowPane.getChildren().add(gridPane);
         }
@@ -301,6 +305,48 @@ public class MainWindowController {
             addButton.setVisible(true);
         }
         currentCollectionName = collection.getCollectionName();
+    }
+
+
+    private void handleNumberChange(Label oldNumberLabel) {
+
+        TextInputDialog tiDialog = new TextInputDialog();
+        tiDialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+        tiDialog.getDialogPane().getStyleClass().add("alert");
+
+        tiDialog.setTitle("Change item number");
+        tiDialog.setHeaderText("Enter new number \n(It has to be unique)");
+        tiDialog.setContentText("Number:");
+
+        String oldNumber = oldNumberLabel.getText();
+        oldNumber = oldNumber.substring(oldNumber.indexOf(":") + 2);
+        tiDialog.getEditor().setText(oldNumber);
+
+        Optional<String> result = tiDialog.showAndWait();
+        if (result.isPresent()) {
+            if (!result.get().equals("")) {
+                try {
+                    int newNumber = Integer.parseInt(result.get());
+                    var currentCollection = collectionMap.get(currentCollectionName);
+                    boolean methodResult = currentCollection.changeNumber(Integer.parseInt(oldNumber), newNumber);
+                    if (methodResult) {
+                        oldNumberLabel.setText("Number: " + newNumber);
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+
+                        DialogPane dialog = alert.getDialogPane();
+                        dialog.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+                        alert.setTitle("Error");
+                        alert.setHeaderText("Can't change number");
+                        alert.setContentText("Provided number is not valid");
+
+                        alert.showAndWait();
+                    }
+                } catch (NumberFormatException e) {
+                    return; // TODO: 19.07.2023
+                }
+            }
+        }
     }
 
     private void handleCheckBoxClick(ActionEvent e) {
