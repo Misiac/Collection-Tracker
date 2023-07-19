@@ -42,7 +42,6 @@ public class Collection {
         return datasource;
     }
 
-
     public void updateOwnedStatus(boolean checkBoxStatus) {
         if (checkBoxStatus) {
             numberOfItemsOwned++;
@@ -203,7 +202,6 @@ public class Collection {
             return resizedImage;
         }
         return null;
-
     }
 
     public boolean updateItemName(int id, String newName) {

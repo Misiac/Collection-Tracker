@@ -9,7 +9,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
 
-
 public class DataSource {
 
     private static final String CONNECTION_STRING_START = "jdbc:sqlite:";
@@ -31,14 +30,11 @@ public class DataSource {
     public DataSource(String absolutePath) {
         this.CONNECTION_STRING = CONNECTION_STRING_START + absolutePath;
         try {
-
             connection = DriverManager.getConnection(CONNECTION_STRING);
 
             if (!prepareStatements()) {
                 throw new SQLException();
             }
-
-
         } catch (Exception e) {
             System.out.println("Data source error: " + e.getMessage());
             e.printStackTrace();
@@ -48,7 +44,6 @@ public class DataSource {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean prepareStatements() {
         try {
-
             queryItems = connection.prepareStatement("SELECT * FROM Items");
             queryInfo = connection.prepareStatement("SELECT * FROM Info");
             updateItemStatus = connection.prepareStatement("UPDATE Items SET isOwned = ? WHERE ID = ?");
@@ -64,7 +59,6 @@ public class DataSource {
             return false;
         }
         return true;
-
     }
 
     public DataSource(TextField name, File directory, File img) {
@@ -103,7 +97,6 @@ public class DataSource {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
     }
 
     public ResultSet queryItems() {
@@ -143,8 +136,6 @@ public class DataSource {
             System.out.println(e.getMessage());
             return false;
         }
-
-
     }
 
     private static byte[] covertFileToByteArray(File file) {
@@ -158,12 +149,10 @@ public class DataSource {
                 bos.write(buffer, 0, len);
                 returnArray = bos.toByteArray();
                 bos.close();
-
             }
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
-
         return returnArray;
     }
 
@@ -209,7 +198,6 @@ public class DataSource {
             System.out.println("Couldn't close the db " + e.getMessage());
         }
     }
-
 
     public void addNewItemToDB(TextField newName, TextField newNumber, File imgFile) {
 
@@ -269,7 +257,6 @@ public class DataSource {
             return false;
         }
         return true;
-
     }
 
     public boolean changeItemImage(int id, File tempFile) {

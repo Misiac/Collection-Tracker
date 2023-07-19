@@ -23,7 +23,6 @@ public class AddItemDialogController {
         imgFile = null;
         newName.setContextMenu(new ContextMenu());
         newNumber.setContextMenu(new ContextMenu());
-
     }
 
     public boolean isInputOkay() {
@@ -35,7 +34,6 @@ public class AddItemDialogController {
             return false;
         }
         return newName.getText() != null && imgFile != null;
-
     }
 
     @FXML
@@ -50,7 +48,6 @@ public class AddItemDialogController {
         this.imgFile = fileChooser.showOpenDialog(rootCreationDialog.getScene().getWindow());
 
         previousPath = imgFile.getParentFile();
-
     }
 
     public TextField getNewName() {

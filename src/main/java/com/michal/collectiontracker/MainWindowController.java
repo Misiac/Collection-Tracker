@@ -73,7 +73,7 @@ public class MainWindowController {
         FlowPane.setMargin(addButton, new Insets(20, 0, 0, 10));
         addButton.setGraphic(new ImageView(
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream("img/plus.png")))));
-        addButton.setOnAction(this::showAddItemDialog);
+        addButton.setOnAction(e -> showAddItemDialog());
 
         StackPane.setAlignment(menuButton, Pos.TOP_RIGHT);
         StackPane.setAlignment(collectionNameLabel, Pos.BOTTOM_LEFT);
@@ -496,7 +496,7 @@ public class MainWindowController {
         );
     }
 
-    private void showAddItemDialog(ActionEvent e) {
+    private void showAddItemDialog() {
         Dialog<ButtonType> addItemDialog = new Dialog<>();
         addItemDialog.initOwner(rootPane.getScene().getWindow());
         addItemDialog.setTitle("Add new item");
@@ -578,7 +578,7 @@ public class MainWindowController {
         alert.showAndWait();
     }
 
-    enum FileChooserType {
+   private enum FileChooserType {
         SAV,
         IMG
     }
@@ -595,6 +595,7 @@ public class MainWindowController {
         return fileChooser.showOpenDialog(rootPane.getScene().getWindow());
     }
 
+    @SuppressWarnings("SameParameterValue")
     private String showCustomTextInputDialog(String title, String header, String contentText, String setText) {
         TextInputDialog tiDialog = new TextInputDialog();
         tiDialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
