@@ -215,4 +215,20 @@ public class Collection {
         }
         return false;
     }
+
+    public boolean removeItem(int itemId) {
+
+        boolean methodResult = datasource.removeItemFromDb(itemId);
+
+        if (methodResult) {
+            boolean isOwned = collectionItems.get(itemId).isOwned;
+            if (isOwned) {
+                numberOfItemsOwned--;
+            }
+            totalNumberOfItems--;
+            collectionItems.remove(itemId);
+            return true;
+        }
+        return false;
+    }
 }

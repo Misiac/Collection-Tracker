@@ -284,7 +284,17 @@ public class MainWindowController {
         currentCollectionName = collection.getCollectionName();
     }
 
-    private void handleRemoveItem(Label itemID, GridPane gridPane) {
+    private void handleRemoveItem(Label itemIdLabel, GridPane gridPane) {
+
+        var currentCollection = collectionMap.get(currentCollectionName);
+        String id = itemIdLabel.getText();
+        id = id.substring(id.indexOf(":") + 2);
+        boolean methodResult = currentCollection.removeItem(Integer.parseInt(id));
+
+        if (methodResult) {
+            flowPane.getChildren().remove(gridPane);
+            calculateCollectedNumber(currentCollection);
+        }
     }
 
     private void handleImageChange(Label itemIdLabel, ImageView imageView) {

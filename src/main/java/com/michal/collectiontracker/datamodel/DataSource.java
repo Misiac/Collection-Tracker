@@ -25,6 +25,7 @@ public class DataSource {
     private PreparedStatement updateDbName;
     private PreparedStatement changeItemImage;
     private PreparedStatement changeItemName;
+    private PreparedStatement removeItem;
 
 
     public DataSource(String absolutePath) {
@@ -57,6 +58,7 @@ public class DataSource {
             changeNumber = connection.prepareStatement("UPDATE Items SET ID = ? WHERE ID = ?");
             changeItemImage = connection.prepareStatement("UPDATE Items SET PHOTO = ? WHERE ID = ?");
             changeItemName = connection.prepareStatement("UPDATE Items SET NAME = ? WHERE ID = ?");
+            removeItem = connection.prepareStatement("DELETE FROM Items WHERE ID = ?");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
@@ -197,6 +199,9 @@ public class DataSource {
             if (changeItemName != null) {
                 changeItemName.close();
             }
+            if (removeItem != null) {
+                removeItem.close();
+            }
             if (connection != null) {
                 connection.close();
             }
@@ -290,6 +295,18 @@ public class DataSource {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean removeItemFromDb(int itemId) {
+
+        try {
+            removeItem.setInt(1, itemId);
+            removeItem.execute();
+
+            return true;
+        } catch (SQLException e) {
             return false;
         }
     }
