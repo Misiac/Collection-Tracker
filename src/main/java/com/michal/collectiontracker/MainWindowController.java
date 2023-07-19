@@ -86,7 +86,7 @@ public class MainWindowController {
         item1.setOnAction(e -> shareCollection());
 
         MenuItem item2 = new MenuItem("Change name");
-        item2.setOnAction(e -> changeName());
+        item2.setOnAction(e -> changeCollectionName());
 
         MenuItem item3 = new MenuItem("Change collection bg image");
         item3.setOnAction(e -> handleUpdateBgImage());
@@ -108,7 +108,7 @@ public class MainWindowController {
         });
     }
 
-    private void changeName() {
+    private void changeCollectionName() {
 
         String result = showCustomTextInputDialog(
                 "Change collection name",
@@ -247,7 +247,7 @@ public class MainWindowController {
             item1.setOnAction(event -> handleNumberChange(itemID));
 
             MenuItem item2 = new MenuItem("Change name");
-            item2.setOnAction(event -> handleNameChange(itemID, itemName));
+            item2.setOnAction(event -> handleItemNameChange(itemID, itemName));
 
             MenuItem item3 = new MenuItem("Change image");
             item3.setOnAction(event -> handleImageChange(itemID, imageView));
@@ -302,9 +302,25 @@ public class MainWindowController {
         }
     }
 
-    private void handleNameChange(Label itemID, Label itemName) {
+    private void handleItemNameChange(Label itemIdLabel, Label itemName) {
 
+        String result = showCustomTextInputDialog(
+                "Change item name",
+                "Enter new name",
+                "Name:",
+                itemName.getText()
+        );
 
+        if (result != null && !result.equals("")) {
+            var currentCollection = collectionMap.get(currentCollectionName);
+
+            String id = itemIdLabel.getText();
+            id = id.substring(id.indexOf(":") + 2);
+            boolean methodResult = currentCollection.updateItemName(Integer.parseInt(id), result);
+            if (methodResult) {
+                itemName.setText(result);
+            }
+        }
     }
 
     private void handleNumberChange(Label oldNumberLabel) {

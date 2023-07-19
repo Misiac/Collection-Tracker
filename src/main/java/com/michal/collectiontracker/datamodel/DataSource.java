@@ -24,6 +24,7 @@ public class DataSource {
     private PreparedStatement insertNewItem;
     private PreparedStatement updateDbName;
     private PreparedStatement changeItemImage;
+    private PreparedStatement changeItemName;
 
 
     public DataSource(String absolutePath) {
@@ -55,6 +56,7 @@ public class DataSource {
             updateDbName = connection.prepareStatement("UPDATE Info SET COLLECTIONNAME = ?");
             changeNumber = connection.prepareStatement("UPDATE Items SET ID = ? WHERE ID = ?");
             changeItemImage = connection.prepareStatement("UPDATE Items SET PHOTO = ? WHERE ID = ?");
+            changeItemName = connection.prepareStatement("UPDATE Items SET NAME = ? WHERE ID = ?");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;
@@ -192,11 +194,12 @@ public class DataSource {
             if (changeNumber != null) {
                 changeNumber.close();
             }
+            if (changeItemName != null) {
+                changeItemName.close();
+            }
             if (connection != null) {
                 connection.close();
             }
-
-
         } catch (SQLException e) {
             System.out.println("Couldn't close the db " + e.getMessage());
         }
@@ -270,6 +273,20 @@ public class DataSource {
             changeItemImage.setBytes(1, covertFileToByteArray(tempFile));
             changeItemImage.setInt(2, id);
             changeItemImage.execute();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean changeItemName(int id, String newName) {
+
+        try {
+            changeItemName.setString(1, newName);
+            changeItemName.setInt(2, id);
+
+            changeItemName.execute();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();

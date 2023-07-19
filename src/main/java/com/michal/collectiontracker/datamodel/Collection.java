@@ -205,4 +205,14 @@ public class Collection {
         return null;
 
     }
+
+    public boolean updateItemName(int id, String newName) {
+
+        boolean methodResult = datasource.changeItemName(id, newName);
+        if (methodResult) {
+            collectionItems.get(id).setName(newName);
+            return true;
+        }
+        return false;
+    }
 }
