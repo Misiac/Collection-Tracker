@@ -101,16 +101,6 @@ public class Collection {
 
     }
 
-    public static void saveImageToFile(Image image) {
-        try {
-
-            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
-            ImageIO.write(bufferedImage, "png", tempFile);
-
-        } catch (IOException e) {
-            System.out.println("Failed to save image: " + e.getMessage());
-        }
-    }
 
     public Map<Integer, CollectionItem> getCollectionItems() {
         return collectionItems;
@@ -124,16 +114,21 @@ public class Collection {
         return numberOfItemsOwned;
     }
 
-    public void addItem(TextField newName, TextField newNumber, File imgFile) {
-
-        Image resizedImage;
+    private static Image resizeAndSaveImageFromFile(File imgFile) {
+        Image resizedImage = null;
         try {
             resizedImage = new Image(imgFile.toURI().toURL().toExternalForm(), 127, 127, true, true);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(resizedImage, null);
+            ImageIO.write(bufferedImage, "png", tempFile);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        saveImageToFile(resizedImage);
+        return resizedImage;
+    }
 
+    public void addItem(TextField newName, TextField newNumber, File imgFile) {
+
+         Image resizedImage = resizeAndSaveImageFromFile(imgFile);
 
         int number = Integer.parseInt(newNumber.getText());
         CollectionItem newCollectionItem;
@@ -143,7 +138,6 @@ public class Collection {
 
         collectionItems.put(number, newCollectionItem);
         totalNumberOfItems++;
-
     }
 
     public void updateBgImage(File newImg) {
@@ -199,7 +193,11 @@ public class Collection {
                 collectionItems.put(newNumber, changedItem);
                 return true;
             }
-            return false;
-        } else return false;
+        }
+        return false;
+    }
+
+    public void changeImage(int i, File img) {
+
     }
 }
