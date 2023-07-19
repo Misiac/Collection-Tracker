@@ -181,7 +181,10 @@ public class MainWindowController {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File targetDir = directoryChooser.showDialog(rootPane.getScene().getWindow());
         var currentCol = collectionMap.get(currentCollectionName);
-        currentCol.copyCollection(targetDir);
+        if (targetDir != null) {
+            currentCol.copyCollection(targetDir);
+        }
+
     }
 
     private void handleUpdateBgImage() {
