@@ -31,6 +31,7 @@ public class AddItemDialogController {
             else return false;
 
         } catch (NumberFormatException e) {
+            System.out.println("NumberFormatException => " + e.getMessage());
             return false;
         }
         return newName.getText() != null && imgFile != null;

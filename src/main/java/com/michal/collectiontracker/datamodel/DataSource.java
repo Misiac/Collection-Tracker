@@ -35,9 +35,8 @@ public class DataSource {
             if (!prepareStatements()) {
                 throw new SQLException();
             }
-        } catch (Exception e) {
-            System.out.println("Data source error: " + e.getMessage());
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("SQLException => " + e.getMessage());
         }
     }
 
@@ -55,7 +54,7 @@ public class DataSource {
             changeItemName = connection.prepareStatement("UPDATE Items SET NAME = ? WHERE ID = ?");
             removeItem = connection.prepareStatement("DELETE FROM Items WHERE ID = ?");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("SQLException => " + e.getMessage());
             return false;
         }
         return true;
@@ -67,7 +66,7 @@ public class DataSource {
             connection = DriverManager.getConnection(CONNECTION_STRING);
 
         } catch (SQLException e) {
-            System.out.println("Data creation error + " + e.getMessage());
+            System.out.println("SQLException => " + e.getMessage());
         }
         try {
             Statement statement = connection.createStatement();
@@ -95,7 +94,7 @@ public class DataSource {
             insertIntoItemsCreation.execute();
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("SQLException => " + e.getMessage());
         }
     }
 
@@ -105,7 +104,7 @@ public class DataSource {
             queryItems.execute();
             return queryItems.getResultSet();
         } catch (SQLException e) {
-            System.out.println("Error executing statement");
+            System.out.println("SQLException => " + e.getMessage());
             return null;
         }
     }
@@ -116,7 +115,7 @@ public class DataSource {
             return queryInfo.getResultSet();
 
         } catch (SQLException e) {
-            System.out.println("Error Executing infoquery");
+            System.out.println("SQLException => " + e.getMessage());
             return null;
         }
     }
@@ -133,7 +132,7 @@ public class DataSource {
             updateItemStatus.execute();
             return true;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("SQLException => " + e.getMessage());
             return false;
         }
     }
@@ -151,7 +150,7 @@ public class DataSource {
                 bos.close();
             }
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            System.out.println("IOException => " + e.getMessage());
         }
         return returnArray;
     }
@@ -195,7 +194,7 @@ public class DataSource {
                 connection.close();
             }
         } catch (SQLException e) {
-            System.out.println("Couldn't close the db " + e.getMessage());
+            System.out.println("SQLException => " + e.getMessage());
         }
     }
 
@@ -210,7 +209,7 @@ public class DataSource {
 
                 insertNewItem.execute();
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                System.out.println("SQLException => " + e.getMessage());
             }
         }
     }
@@ -221,7 +220,7 @@ public class DataSource {
             updateBgImage.setBytes(1, covertFileToByteArray(newImg));
             updateBgImage.execute();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("SQLException => " + e.getMessage());
         }
     }
 
@@ -230,7 +229,7 @@ public class DataSource {
             updateDbName.setString(1, newName);
             updateDbName.execute();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("SQLException => " + e.getMessage());
         }
     }
 
@@ -242,7 +241,7 @@ public class DataSource {
             resetStatement.execute(query);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("SQLException => " + e.getMessage());
         }
     }
 
@@ -253,7 +252,7 @@ public class DataSource {
             changeNumber.setInt(2, oldNumber);
             changeNumber.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("SQLException => " + e.getMessage());
             return false;
         }
         return true;
@@ -267,7 +266,7 @@ public class DataSource {
             changeItemImage.execute();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("SQLException => " + e.getMessage());
             return false;
         }
     }
@@ -281,7 +280,7 @@ public class DataSource {
             changeItemName.execute();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("SQLException => " + e.getMessage());
             return false;
         }
     }
@@ -294,6 +293,7 @@ public class DataSource {
 
             return true;
         } catch (SQLException e) {
+            System.out.println("SQLException => " + e.getMessage());
             return false;
         }
     }

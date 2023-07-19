@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -189,9 +190,8 @@ public class MainWindowController {
             Collection newCollection = new Collection(file);
             loadCollection(newCollection);
 
-        } catch (Exception e) {
-            System.out.println("File not loaded properly");
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("SQLException => " + e.getMessage());
         }
     }
 
@@ -428,7 +428,7 @@ public class MainWindowController {
         try {
             aboutDialog.getDialogPane().setContent(fxmlLoader.load());
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println("IOException => " + e.getMessage());
         }
         aboutDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         aboutDialog.showAndWait();
@@ -460,7 +460,7 @@ public class MainWindowController {
         try {
             creationDialog.getDialogPane().setContent(fxmlLoader.load());
         } catch (IOException e) {
-            System.out.println("Error loading creation dialog");
+            System.out.println("IOException => " + e.getMessage());
         }
         CreationDialogController controller = fxmlLoader.getController();
         creationDialog.getDialogPane().getButtonTypes().add(new ButtonType("Create", ButtonType.OK.getButtonData()));
@@ -505,8 +505,8 @@ public class MainWindowController {
 
         try {
             addItemDialog.getDialogPane().setContent(fxmlLoader.load());
-        } catch (IOException ex) {
-            System.out.println("Error loading creation dialog");
+        } catch (IOException e) {
+            System.out.println("IOException => " + e.getMessage());
         }
         AddItemDialogController controller = fxmlLoader.getController();
         addItemDialog.getDialogPane().getButtonTypes().add(new ButtonType("Add", ButtonType.OK.getButtonData()));
@@ -536,7 +536,6 @@ public class MainWindowController {
     }
 
     private void loadCollection(Collection collection) {
-        try {
             if (!collectionMap.containsKey(collection.getCollectionName())) {
 
                 collectionMap.put(collection.getCollectionName(), collection);
@@ -557,8 +556,6 @@ public class MainWindowController {
                         "Selected collection is already loaded",
                         "Choose another file");
             }
-        } catch (Exception ignored) {
-        }
     }
 
     private void showCustomAlert(Alert.AlertType type, String title, String headerText, String contentText) {

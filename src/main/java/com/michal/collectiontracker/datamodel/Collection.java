@@ -93,7 +93,7 @@ public class Collection {
         try {
             this.backgroundImage = new Image(img.toURI().toURL().toExternalForm());
         } catch (MalformedURLException e) {
-            System.out.println("path error");
+            System.out.println("MalformedURLException => " + e.getMessage());
         }
         numberOfItemsOwned = 0;
         totalNumberOfItems = 0;
@@ -118,7 +118,7 @@ public class Collection {
             BufferedImage bufferedImage = SwingFXUtils.fromFXImage(resizedImage, null);
             ImageIO.write(bufferedImage, "png", tempFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("IOException => " + e.getMessage());
         }
         return resizedImage;
     }
@@ -143,7 +143,7 @@ public class Collection {
         try {
             this.backgroundImage = new Image(newImg.toURI().toURL().toExternalForm());
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            System.out.println("MalformedURLException => " + e.getMessage());
         }
     }
 
@@ -165,7 +165,7 @@ public class Collection {
             Files.copy(filePath, destination);
             DataSource.resetStatus(destination.toAbsolutePath().toString());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("IOException => " + e.getMessage());
         }
     }
 
