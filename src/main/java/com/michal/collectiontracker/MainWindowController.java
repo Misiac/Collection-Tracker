@@ -343,19 +343,40 @@ public class MainWindowController {
             if (!result.get().equals("")) {
                 try {
                     int newNumber = Integer.parseInt(result.get());
-                    var currentCollection = collectionMap.get(currentCollectionName);
-                    boolean methodResult = currentCollection.changeNumber(Integer.parseInt(oldNumber), newNumber);
-                    if (methodResult) {
-                        oldNumberLabel.setText("Number: " + newNumber);
-                    } else {
+                    int parsedOldNumber = Integer.parseInt(oldNumber);
+                    if (newNumber < 0) {
                         showCustomAlert(Alert.AlertType.ERROR,
                                 "Error",
                                 "Can't change number",
-                                "Provided number is not valid"
+                                "Enter a positive number"
                         );
                     }
+                    if (parsedOldNumber == newNumber) {
+                        showCustomAlert(Alert.AlertType.INFORMATION,
+                                "Error",
+                                "Can't change number",
+                                "Selected item already has that number"
+                        );
+
+                    } else {
+                        var currentCollection = collectionMap.get(currentCollectionName);
+                        boolean methodResult = currentCollection.changeNumber(parsedOldNumber, newNumber);
+                        if (methodResult) {
+                            oldNumberLabel.setText("Number: " + newNumber);
+                        } else {
+                            showCustomAlert(Alert.AlertType.ERROR,
+                                    "Error",
+                                    "Can't change number",
+                                    "Number already exists"
+                            );
+                        }
+                    }
                 } catch (NumberFormatException e) {
-                    return; // TODO: 19.07.2023
+                    showCustomAlert(Alert.AlertType.ERROR,
+                            "Error",
+                            "Can't change number",
+                            "Enter a number"
+                    );
                 }
             }
         }
