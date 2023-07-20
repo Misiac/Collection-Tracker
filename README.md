@@ -2,7 +2,7 @@
 
 <h1 align="center">
   <br>
- <img src="" alt="Collection Tracker" width="200">
+ <img src="src/main/resources/com/michal/collectiontracker/img/ctlogoaboutres.png" alt="Collection Tracker" width="150">
   <br>
   Collection Tracker
   <br>
@@ -10,12 +10,13 @@
 
 <h4 align="center">A simple JavaFX app for hobbyists to organize, share and manage their personal collections efficiently.</h4>
 <p align="center">
+	<a href="#description">Description</a> •
   <a href="#key-features">Key Features</a> •
   <a href="#how-to-use">How To Use</a> •
-  <a href="#credits">Credits</a> •
+  <a href="#credits">Credits</a> 
 </p>
 
-![screenshot]()
+![screenshot](screenshot.png)
 ## Description
 Collection Tracker is a JavaFX application designed for hobbyists and collectors who want to organize and manage their personal collections efficiently. Whether you collect stamps, coins, action figures, or anything else, this app aims to simplify the process of keeping track of your items, their details, and the overall status of your collection.
 
