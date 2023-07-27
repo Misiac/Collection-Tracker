@@ -58,3 +58,5 @@ buildNumber.properties
 *.zip
 *.tar.gz
 *.rar
+/.idea/
+/.mvn/
