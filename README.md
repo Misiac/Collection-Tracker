@@ -42,8 +42,19 @@ I did not use several framework features such as binding because I didn't know t
 	  - Share collection with people like you. Just give them a collection file.
 	  - Or generate new non-selected collection using context menu so your friends can select what they own!
 ## Requirements
-
+* At least 1280x720 (HD) resolution screen
+* JDK 17
 ## How To Use
 
+To clone the repo use
+```
+git clone https://github.com/Misiac/Collection-Tracker.git
+```
+You can use it via your IDE
+or build the jlink package with
+```
+mvn javafx:jlink
+```
 
 ## Credits
+https://swiatkolekcji.com/ - for images on screenshot
