@@ -8,7 +8,6 @@ public class CollectionItem {
     Image image;
     boolean isOwned;
 
-
     public CollectionItem() {
     }
 

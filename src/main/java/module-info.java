@@ -9,5 +9,6 @@ module com.michal.collectiontracker {
 
     opens com.michal.collectiontracker to javafx.fxml;
 
+    exports com.michal.collectiontracker.datamodel;
     exports com.michal.collectiontracker;
 }

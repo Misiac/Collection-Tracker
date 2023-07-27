@@ -23,12 +23,10 @@ public class CreationDialogController {
     public File choosenDirectory;
     public File choosenImg;
 
-
     public void initialize() {
         choosenDirectory = null;
         choosenImg = null;
         newName.setContextMenu(new ContextMenu());
-
     }
 
     @FXML
@@ -51,7 +49,6 @@ public class CreationDialogController {
         if (choosenDirectory == null || choosenImg == null) {
             return false;
         }
-
         if (choosenDirectory.getAbsolutePath().equals("C:\\")) {
             infoLabel.setVisible(true);
             return false;

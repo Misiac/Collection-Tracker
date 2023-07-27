@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -57,7 +58,6 @@ public class MainWindowController {
     private String currentCollectionName;
     boolean isCreationModeEnabled;
 
-
     public void initialize() {
         buttonsGroup = new ToggleGroup();
         currentCollectionName = null;
@@ -74,30 +74,26 @@ public class MainWindowController {
         FlowPane.setMargin(addButton, new Insets(20, 0, 0, 10));
         addButton.setGraphic(new ImageView(
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream("img/plus.png")))));
-        addButton.setOnAction(this::showAddItemDialog);
-
+        addButton.setOnAction(e -> showAddItemDialog());
 
         StackPane.setAlignment(menuButton, Pos.TOP_RIGHT);
         StackPane.setAlignment(collectionNameLabel, Pos.BOTTOM_LEFT);
         StackPane.setAlignment(collectedNumber, Pos.BOTTOM_RIGHT);
 
-
         creationButton.setVisible(false);
         addButton.setVisible(false);
-
 
         MenuItem item1 = new MenuItem("Share non-selected collection");
         item1.setOnAction(e -> shareCollection());
 
         MenuItem item2 = new MenuItem("Change name");
-        item2.setOnAction(e -> changeName());
+        item2.setOnAction(e -> changeCollectionName());
 
         MenuItem item3 = new MenuItem("Change collection bg image");
         item3.setOnAction(e -> handleUpdateBgImage());
 
         MenuItem item4 = new MenuItem("Unload collection");
         item4.setOnAction(e -> unloadCollection());
-
 
         scrollPane.getContent().setOnScroll(scrollEvent -> {
             double deltaY = scrollEvent.getDeltaY() * 0.005;
@@ -113,41 +109,32 @@ public class MainWindowController {
         });
     }
 
-    private void changeName() {
+    private void changeCollectionName() {
 
-        TextInputDialog tiDialog = new TextInputDialog();
-        tiDialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
-        tiDialog.getDialogPane().getStyleClass().add("alert");
+        String result = showCustomTextInputDialog(
+                "Change collection name",
+                "Enter new name \n(Filename won't change)",
+                "Name:",
+                currentCollectionName
+        );
 
-        tiDialog.setTitle("Change collection name");
-        tiDialog.setHeaderText("Enter new name \n(Filename won't change)");
-        tiDialog.setContentText("Name:");
-        tiDialog.getEditor().setText(currentCollectionName);
+        if (result != null && !result.equals("")) {
+            var currentCollection = collectionMap.get(currentCollectionName);
+            String oldName = currentCollection.getCollectionName();
 
-        Optional<String> result = tiDialog.showAndWait();
-        if (result.isPresent()) {
-            String newName = result.get();
-            if (!newName.equals("")) {
-                var currentCollection = collectionMap.get(currentCollectionName);
-                String oldName = currentCollection.getCollectionName();
+            var currentColBtn = buttonMap.get(oldName);
+            currentColBtn.setText(result);
+            buttonMap.remove(oldName);
+            buttonMap.put(result, currentColBtn);
 
-                var currentColBtn = buttonMap.get(oldName);
-                currentColBtn.setText(newName);
-                buttonMap.remove(oldName);
-                buttonMap.put(newName, currentColBtn);
+            currentCollection.updateCollectionName(result);
 
-                currentCollection.updateCollectionName(newName);
+            collectionMap.remove(oldName);
+            collectionMap.put(result, currentCollection);
 
+            collectionNameLabel.setText(result);
 
-                collectionMap.remove(oldName);
-                collectionMap.put(newName, currentCollection);
-
-                collectionNameLabel.setText(newName);
-
-                currentCollectionName = newName;
-
-            }
-
+            currentCollectionName = result;
         }
     }
 
@@ -157,17 +144,13 @@ public class MainWindowController {
         currentCol.unload();
         collectionMap.remove(currentCollectionName);
 
-
         flowPane.getChildren().clear();
         checkBoxMap.clear();
         leftVBox.getChildren().remove(buttonMap.get(currentCollectionName));
-
         resetStackPane();
 
         collectionImage.setImage(null);
         currentCollectionName = null;
-
-
     }
 
     private void resetStackPane() {
@@ -184,17 +167,11 @@ public class MainWindowController {
         if (targetDir != null) {
             currentCol.copyCollection(targetDir);
         }
-
     }
 
     private void handleUpdateBgImage() {
 
-        FileChooser fileChooser = new FileChooser();
-
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Image", "*.jpg", "*.png")
-        );
-        File newImg = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
+        File newImg = showCustomFileChooser(FileChooserType.IMG);
 
         if (newImg != null) {
             var currentCol = collectionMap.get(currentCollectionName);
@@ -203,26 +180,19 @@ public class MainWindowController {
             collectionImage.setFitWidth(stackPane.getMaxWidth());
             collectionImage.setImage(currentCol.getBackgroundImage());
         }
-
     }
 
     @FXML
     public void chooseCollectionFile() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("CT save files", "*.sav"));
-        File file = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
+        File file = showCustomFileChooser(FileChooserType.SAV);
         if (file == null) return;
         try {
-
             Collection newCollection = new Collection(file);
             loadCollection(newCollection);
 
-        } catch (Exception e) {
-            System.out.println("File not loaded properly");
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("SQLException => " + e.getMessage());
         }
-
     }
 
     private void handleCollectionChange(ActionEvent actionEvent) {
@@ -234,8 +204,6 @@ public class MainWindowController {
         } else {
             ((ToggleButton) actionEvent.getSource()).setSelected(true);
         }
-
-
     }
 
     public void renderCollection(Collection collection) {
@@ -275,9 +243,24 @@ public class MainWindowController {
             gridPane.setPrefHeight(150);
             gridPane.setMaxHeight(150);
 
+            MenuItem item1 = new MenuItem("Change number");
+            item1.setOnAction(event -> handleNumberChange(itemID));
+
+            MenuItem item2 = new MenuItem("Change name");
+            item2.setOnAction(event -> handleItemNameChange(itemID, itemName));
+
+            MenuItem item3 = new MenuItem("Change image");
+            item3.setOnAction(event -> handleImageChange(itemID, imageView));
+
+            MenuItem item4 = new MenuItem("Remove item");
+            item4.setOnAction(event -> handleRemoveItem(itemID, gridPane));
+
+            ContextMenu contextMenu = new ContextMenu(item1, item2, item3, item4);
+
+            gridPane.setOnContextMenuRequested(event -> contextMenu.show(gridPane, event.getScreenX(), event.getScreenY()));
+
             imageView.setFitHeight(124);
             imageView.setFitWidth(127);
-
 
             checkBox.setPadding(new Insets(5));
             checkBox.setOnAction(this::handleCheckBoxClick);
@@ -287,10 +270,8 @@ public class MainWindowController {
             gridPane.add(itemID, 0, 2, 1, 1);
             gridPane.add(checkBox, 1, 2, 1, 1);
 
-
             GridPane.setHalignment(itemName, HPos.CENTER);
             GridPane.setHalignment(checkBox, HPos.RIGHT);
-
 
             flowPane.getChildren().add(gridPane);
         }
@@ -303,6 +284,113 @@ public class MainWindowController {
         currentCollectionName = collection.getCollectionName();
     }
 
+    private void handleRemoveItem(Label itemIdLabel, GridPane gridPane) {
+
+        var currentCollection = collectionMap.get(currentCollectionName);
+        String id = itemIdLabel.getText();
+        id = id.substring(id.indexOf(":") + 2);
+        boolean methodResult = currentCollection.removeItem(Integer.parseInt(id));
+
+        if (methodResult) {
+            flowPane.getChildren().remove(gridPane);
+            calculateCollectedNumber(currentCollection);
+        }
+    }
+
+    private void handleImageChange(Label itemIdLabel, ImageView imageView) {
+
+        File img = showCustomFileChooser(FileChooserType.IMG);
+        if (img != null) {
+
+            var currentCollection = collectionMap.get(currentCollectionName);
+            String labelText = itemIdLabel.getText();
+            int itemId = Integer.parseInt(labelText.substring(labelText.indexOf(":") + 2));
+            Image newImage = currentCollection.changeImage(itemId, img);
+            if (newImage != null) {
+                imageView.setImage(newImage);
+            }
+        }
+    }
+
+    private void handleItemNameChange(Label itemIdLabel, Label itemName) {
+
+        String result = showCustomTextInputDialog(
+                "Change item name",
+                "Enter new name",
+                "Name:",
+                itemName.getText()
+        );
+
+        if (result != null && !result.equals("")) {
+            var currentCollection = collectionMap.get(currentCollectionName);
+
+            String id = itemIdLabel.getText();
+            id = id.substring(id.indexOf(":") + 2);
+            boolean methodResult = currentCollection.updateItemName(Integer.parseInt(id), result);
+            if (methodResult) {
+                itemName.setText(result);
+            }
+        }
+    }
+
+    private void handleNumberChange(Label oldNumberLabel) {
+
+        TextInputDialog tiDialog = new TextInputDialog();
+        tiDialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+        tiDialog.getDialogPane().getStyleClass().add("alert");
+
+        tiDialog.setTitle("Change item number");
+        tiDialog.setHeaderText("Enter new number \n(It has to be unique)");
+        tiDialog.setContentText("Number:");
+
+        String oldNumber = oldNumberLabel.getText();
+        oldNumber = oldNumber.substring(oldNumber.indexOf(":") + 2);
+        tiDialog.getEditor().setText(oldNumber);
+
+        Optional<String> result = tiDialog.showAndWait();
+        if (result.isPresent()) {
+            if (!result.get().equals("")) {
+                try {
+                    int newNumber = Integer.parseInt(result.get());
+                    int parsedOldNumber = Integer.parseInt(oldNumber);
+                    if (newNumber < 0) {
+                        showCustomAlert(Alert.AlertType.ERROR,
+                                "Error",
+                                "Can't change number",
+                                "Enter a positive number"
+                        );
+                    }
+                    if (parsedOldNumber == newNumber) {
+                        showCustomAlert(Alert.AlertType.INFORMATION,
+                                "Error",
+                                "Can't change number",
+                                "Selected item already has that number"
+                        );
+
+                    } else {
+                        var currentCollection = collectionMap.get(currentCollectionName);
+                        boolean methodResult = currentCollection.changeNumber(parsedOldNumber, newNumber);
+                        if (methodResult) {
+                            oldNumberLabel.setText("Number: " + newNumber);
+                        } else {
+                            showCustomAlert(Alert.AlertType.ERROR,
+                                    "Error",
+                                    "Can't change number",
+                                    "Number already exists"
+                            );
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    showCustomAlert(Alert.AlertType.ERROR,
+                            "Error",
+                            "Can't change number",
+                            "Enter a number"
+                    );
+                }
+            }
+        }
+    }
+
     private void handleCheckBoxClick(ActionEvent e) {
         int selectedItemID = checkBoxMap.get((CheckBox) e.getSource());
         boolean currentCheckBoxStatus = ((CheckBox) e.getSource()).isSelected();
@@ -313,8 +401,6 @@ public class MainWindowController {
             currentCollection.updateOwnedStatus(currentCheckBoxStatus);
             calculateCollectedNumber(currentCollection);
         }
-
-
     }
 
     private void calculateCollectedNumber(Collection collection) {
@@ -327,7 +413,6 @@ public class MainWindowController {
 
         for (Map.Entry<String, Collection> entry : collectionMap.entrySet()) {
             entry.getValue().getDatasource().close();
-
         }
         Platform.exit();
     }
@@ -343,14 +428,11 @@ public class MainWindowController {
         try {
             aboutDialog.getDialogPane().setContent(fxmlLoader.load());
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println("IOException => " + e.getMessage());
         }
         aboutDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-
         aboutDialog.showAndWait();
-
     }
-
 
     @FXML
     public void handleCreationModeSwitch() {
@@ -378,7 +460,7 @@ public class MainWindowController {
         try {
             creationDialog.getDialogPane().setContent(fxmlLoader.load());
         } catch (IOException e) {
-            System.out.println("Error loading creation dialog");
+            System.out.println("IOException => " + e.getMessage());
         }
         CreationDialogController controller = fxmlLoader.getController();
         creationDialog.getDialogPane().getButtonTypes().add(new ButtonType("Create", ButtonType.OK.getButtonData()));
@@ -394,38 +476,27 @@ public class MainWindowController {
                         + File.separator + controller.newName.getText() + ".sav");
                 if (Files.exists(futureCollectionPath) && controller.isEverythingSet()) {
 
-                    Alert collectionExistsAlert = new Alert(Alert.AlertType.WARNING);
-                    DialogPane dialog = collectionExistsAlert.getDialogPane();
-                    dialog.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
-                    dialog.getStyleClass().add("alert");
-
-
-                    collectionExistsAlert.setTitle("Collection exists");
-                    collectionExistsAlert.setHeaderText("Collection with the choosen path and name already exists");
-                    collectionExistsAlert.setContentText("Choose another name or path");
-
-                    collectionExistsAlert.showAndWait();
+                    showCustomAlert(Alert.AlertType.WARNING,
+                            "Collection exists",
+                            "Collection with the choosen path and name already exists",
+                            "Choose another name or path"
+                    );
                 }
-
             }
             if (result.isPresent()) {
                 if (result.get().getButtonData().isCancelButton()) return;
             }
 
-
         } while (!controller.isEverythingSet() || Files.exists(Objects.requireNonNull(futureCollectionPath)));
-
 
         createNewCollection(
                 controller.getNewName(),
                 controller.getChoosenDirectory(),
                 controller.getChoosenImg()
         );
-
-
     }
 
-    private void showAddItemDialog(ActionEvent e) {
+    private void showAddItemDialog() {
         Dialog<ButtonType> addItemDialog = new Dialog<>();
         addItemDialog.initOwner(rootPane.getScene().getWindow());
         addItemDialog.setTitle("Add new item");
@@ -434,8 +505,8 @@ public class MainWindowController {
 
         try {
             addItemDialog.getDialogPane().setContent(fxmlLoader.load());
-        } catch (IOException ex) {
-            System.out.println("Error loading creation dialog");
+        } catch (IOException e) {
+            System.out.println("IOException => " + e.getMessage());
         }
         AddItemDialogController controller = fxmlLoader.getController();
         addItemDialog.getDialogPane().getButtonTypes().add(new ButtonType("Add", ButtonType.OK.getButtonData()));
@@ -449,8 +520,6 @@ public class MainWindowController {
             if (result.isPresent()) {
                 if (result.get().getButtonData().isCancelButton()) return;
             }
-
-
         } while (!controller.isInputOkay());
 
         Collection currentCollection = collectionMap.get(currentCollectionName);
@@ -459,22 +528,17 @@ public class MainWindowController {
                 controller.getNewNumber(),
                 controller.getImgFile());
         renderCollection(currentCollection);
-
-
     }
 
     private void createNewCollection(TextField newName, File choosenDirectory, File choosenImg) {
         Collection newCollection = new Collection(newName, choosenDirectory, choosenImg);
         loadCollection(newCollection);
-
     }
 
     private void loadCollection(Collection collection) {
-        try {
             if (!collectionMap.containsKey(collection.getCollectionName())) {
 
                 collectionMap.put(collection.getCollectionName(), collection);
-
 
                 ToggleButton button = new ToggleButton(collection.getCollectionName());
                 button.setAlignment(Pos.BOTTOM_LEFT);
@@ -487,20 +551,63 @@ public class MainWindowController {
                 buttonMap.put(collection.getCollectionName(), button);
                 leftVBox.getChildren().add(button);
             } else {
-                Alert alreadyPresentAlert = new Alert(Alert.AlertType.WARNING);
-                DialogPane dialog = alreadyPresentAlert.getDialogPane();
-                dialog.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
-                dialog.getStyleClass().add("alert");
-
-
-                alreadyPresentAlert.setTitle("Already loaded");
-                alreadyPresentAlert.setHeaderText("Selected collection is already loaded");
-                alreadyPresentAlert.setContentText("Choose another file");
-
-                alreadyPresentAlert.showAndWait();
+                showCustomAlert(Alert.AlertType.WARNING,
+                        "Already loaded",
+                        "Selected collection is already loaded",
+                        "Choose another file");
             }
-        } catch (Exception ignored) {
+    }
 
+    private void showCustomAlert(Alert.AlertType type, String title, String headerText, String contentText) {
+        Alert alert = new Alert(type);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+
+        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        alertStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("img/icon.png"))));
+
+        dialogPane.getStyleClass().add("alert");
+
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+
+        alert.showAndWait();
+    }
+
+   private enum FileChooserType {
+        SAV,
+        IMG
+    }
+
+    private File showCustomFileChooser(FileChooserType type) {
+        FileChooser fileChooser = new FileChooser();
+        if (type == FileChooserType.IMG) {
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Image", "*.jpg", "*.png"));
+        } else if (type == FileChooserType.SAV) {
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("CT save files", "*.sav"));
         }
+        return fileChooser.showOpenDialog(rootPane.getScene().getWindow());
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private String showCustomTextInputDialog(String title, String header, String contentText, String setText) {
+        TextInputDialog tiDialog = new TextInputDialog();
+        tiDialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+        tiDialog.getDialogPane().getStyleClass().add("alert");
+
+        Stage dialogStage = (Stage) tiDialog.getDialogPane().getScene().getWindow();
+        dialogStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("img/icon.png"))));
+
+        tiDialog.setTitle(title);
+        tiDialog.setHeaderText(header);
+        tiDialog.setContentText(contentText);
+        if (setText != null) {
+            tiDialog.getEditor().setText(setText);
+        }
+        Optional<String> result = tiDialog.showAndWait();
+        return result.orElse(null);
     }
 }

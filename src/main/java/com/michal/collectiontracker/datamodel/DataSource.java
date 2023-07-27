@@ -9,7 +9,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
 
-
 public class DataSource {
 
     private static final String CONNECTION_STRING_START = "jdbc:sqlite:";
@@ -19,45 +18,46 @@ public class DataSource {
     private PreparedStatement updateBgImage;
     private PreparedStatement queryInfo;
     private PreparedStatement updateItemStatus;
+    private PreparedStatement changeNumber;
     private PreparedStatement insertIntoItemsCreation;
     private PreparedStatement insertNewItem;
     private PreparedStatement updateDbName;
+    private PreparedStatement changeItemImage;
+    private PreparedStatement changeItemName;
+    private PreparedStatement removeItem;
 
 
     public DataSource(String absolutePath) {
         this.CONNECTION_STRING = CONNECTION_STRING_START + absolutePath;
         try {
-
             connection = DriverManager.getConnection(CONNECTION_STRING);
 
             if (!prepareStatements()) {
                 throw new SQLException();
             }
-
-
-        } catch (Exception e) {
-            System.out.println("Data source error: " + e.getMessage());
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("SQLException => " + e.getMessage());
         }
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean prepareStatements() {
         try {
-            String insertNewItemsStatement = "INSERT INTO Items VALUES (?, ?, ?,0)";
-
             queryItems = connection.prepareStatement("SELECT * FROM Items");
             queryInfo = connection.prepareStatement("SELECT * FROM Info");
             updateItemStatus = connection.prepareStatement("UPDATE Items SET isOwned = ? WHERE ID = ?");
-            insertNewItem = connection.prepareStatement(insertNewItemsStatement);
+            insertNewItem = connection.prepareStatement("INSERT INTO Items VALUES (?, ?, ?,0)");
             updateBgImage = connection.prepareStatement("UPDATE Info SET COLLECTIONBG = ?");
             updateDbName = connection.prepareStatement("UPDATE Info SET COLLECTIONNAME = ?");
+            changeNumber = connection.prepareStatement("UPDATE Items SET ID = ? WHERE ID = ?");
+            changeItemImage = connection.prepareStatement("UPDATE Items SET PHOTO = ? WHERE ID = ?");
+            changeItemName = connection.prepareStatement("UPDATE Items SET NAME = ? WHERE ID = ?");
+            removeItem = connection.prepareStatement("DELETE FROM Items WHERE ID = ?");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("SQLException => " + e.getMessage());
             return false;
         }
         return true;
-
     }
 
     public DataSource(TextField name, File directory, File img) {
@@ -66,7 +66,7 @@ public class DataSource {
             connection = DriverManager.getConnection(CONNECTION_STRING);
 
         } catch (SQLException e) {
-            System.out.println("Data creation error + " + e.getMessage());
+            System.out.println("SQLException => " + e.getMessage());
         }
         try {
             Statement statement = connection.createStatement();
@@ -94,9 +94,8 @@ public class DataSource {
             insertIntoItemsCreation.execute();
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("SQLException => " + e.getMessage());
         }
-
     }
 
     public ResultSet queryItems() {
@@ -105,7 +104,7 @@ public class DataSource {
             queryItems.execute();
             return queryItems.getResultSet();
         } catch (SQLException e) {
-            System.out.println("Error executing statement");
+            System.out.println("SQLException => " + e.getMessage());
             return null;
         }
     }
@@ -116,7 +115,7 @@ public class DataSource {
             return queryInfo.getResultSet();
 
         } catch (SQLException e) {
-            System.out.println("Error Executing infoquery");
+            System.out.println("SQLException => " + e.getMessage());
             return null;
         }
     }
@@ -133,11 +132,9 @@ public class DataSource {
             updateItemStatus.execute();
             return true;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("SQLException => " + e.getMessage());
             return false;
         }
-
-
     }
 
     private static byte[] covertFileToByteArray(File file) {
@@ -151,12 +148,10 @@ public class DataSource {
                 bos.write(buffer, 0, len);
                 returnArray = bos.toByteArray();
                 bos.close();
-
             }
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            System.out.println("IOException => " + e.getMessage());
         }
-
         return returnArray;
     }
 
@@ -183,15 +178,25 @@ public class DataSource {
             if (updateDbName != null) {
                 updateDbName.close();
             }
+            if (changeItemImage != null) {
+                changeItemImage.close();
+            }
+            if (changeNumber != null) {
+                changeNumber.close();
+            }
+            if (changeItemName != null) {
+                changeItemName.close();
+            }
+            if (removeItem != null) {
+                removeItem.close();
+            }
             if (connection != null) {
                 connection.close();
             }
-
         } catch (SQLException e) {
-            System.out.println("Couldn't close the db " + e.getMessage());
+            System.out.println("SQLException => " + e.getMessage());
         }
     }
-
 
     public void addNewItemToDB(TextField newName, TextField newNumber, File imgFile) {
 
@@ -204,11 +209,9 @@ public class DataSource {
 
                 insertNewItem.execute();
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                System.out.println("SQLException => " + e.getMessage());
             }
         }
-
-
     }
 
     public void changeDbImage(File newImg) {
@@ -217,9 +220,8 @@ public class DataSource {
             updateBgImage.setBytes(1, covertFileToByteArray(newImg));
             updateBgImage.execute();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("SQLException => " + e.getMessage());
         }
-
     }
 
     public void changeDbName(String newName) {
@@ -227,18 +229,72 @@ public class DataSource {
             updateDbName.setString(1, newName);
             updateDbName.execute();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("SQLException => " + e.getMessage());
         }
     }
 
     public static void resetStatus(String absolutePath) {
+
         String query = "UPDATE Items SET isOwned = 0";
         String connectionSting = CONNECTION_STRING_START + absolutePath;
         try (Statement resetStatement = DriverManager.getConnection(connectionSting).createStatement()) {
             resetStatement.execute(query);
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("SQLException => " + e.getMessage());
+        }
+    }
+
+    public boolean updateNumber(int oldNumber, int newNumber) {
+
+        try {
+            changeNumber.setInt(1, newNumber);
+            changeNumber.setInt(2, oldNumber);
+            changeNumber.execute();
+        } catch (SQLException e) {
+            System.out.println("SQLException => " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean changeItemImage(int id, File tempFile) {
+
+        try {
+            changeItemImage.setBytes(1, covertFileToByteArray(tempFile));
+            changeItemImage.setInt(2, id);
+            changeItemImage.execute();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("SQLException => " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean changeItemName(int id, String newName) {
+
+        try {
+            changeItemName.setString(1, newName);
+            changeItemName.setInt(2, id);
+
+            changeItemName.execute();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("SQLException => " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean removeItemFromDb(int itemId) {
+
+        try {
+            removeItem.setInt(1, itemId);
+            removeItem.execute();
+
+            return true;
+        } catch (SQLException e) {
+            System.out.println("SQLException => " + e.getMessage());
+            return false;
         }
     }
 }

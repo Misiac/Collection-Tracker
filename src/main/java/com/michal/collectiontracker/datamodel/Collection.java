@@ -42,7 +42,6 @@ public class Collection {
         return datasource;
     }
 
-
     public void updateOwnedStatus(boolean checkBoxStatus) {
         if (checkBoxStatus) {
             numberOfItemsOwned++;
@@ -94,22 +93,10 @@ public class Collection {
         try {
             this.backgroundImage = new Image(img.toURI().toURL().toExternalForm());
         } catch (MalformedURLException e) {
-            System.out.println("path error");
+            System.out.println("MalformedURLException => " + e.getMessage());
         }
         numberOfItemsOwned = 0;
         totalNumberOfItems = 0;
-
-    }
-
-    public static void saveImageToFile(Image image) {
-        try {
-
-            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
-            ImageIO.write(bufferedImage, "png", tempFile);
-
-        } catch (IOException e) {
-            System.out.println("Failed to save image: " + e.getMessage());
-        }
     }
 
     public Map<Integer, CollectionItem> getCollectionItems() {
@@ -124,16 +111,21 @@ public class Collection {
         return numberOfItemsOwned;
     }
 
-    public void addItem(TextField newName, TextField newNumber, File imgFile) {
-
-        Image resizedImage;
+    private static Image resizeAndSaveImageFromFile(File imgFile) {
+        Image resizedImage = null;
         try {
             resizedImage = new Image(imgFile.toURI().toURL().toExternalForm(), 127, 127, true, true);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(resizedImage, null);
+            ImageIO.write(bufferedImage, "png", tempFile);
+        } catch (IOException e) {
+            System.out.println("IOException => " + e.getMessage());
         }
-        saveImageToFile(resizedImage);
+        return resizedImage;
+    }
 
+    public void addItem(TextField newName, TextField newNumber, File imgFile) {
+
+        Image resizedImage = resizeAndSaveImageFromFile(imgFile);
 
         int number = Integer.parseInt(newNumber.getText());
         CollectionItem newCollectionItem;
@@ -143,7 +135,6 @@ public class Collection {
 
         collectionItems.put(number, newCollectionItem);
         totalNumberOfItems++;
-
     }
 
     public void updateBgImage(File newImg) {
@@ -152,9 +143,8 @@ public class Collection {
         try {
             this.backgroundImage = new Image(newImg.toURI().toURL().toExternalForm());
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            System.out.println("MalformedURLException => " + e.getMessage());
         }
-
     }
 
     public void updateCollectionName(String newName) {
@@ -171,12 +161,72 @@ public class Collection {
         String newFilename = filename + "_shareCopy.sav";
         Path destination = Paths.get(targetDir.getAbsolutePath(), newFilename);
 
-
         try {
             Files.copy(filePath, destination);
             DataSource.resetStatus(destination.toAbsolutePath().toString());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("IOException => " + e.getMessage());
         }
+    }
+
+    public boolean changeNumber(int oldNumber, int newNumber) {
+
+        boolean alreadyExist = false;
+        Integer boxedNewNumber = newNumber;
+        for (Integer itemId : collectionItems.keySet()) {
+            if (itemId.equals(boxedNewNumber)) {
+                alreadyExist = true;
+                break;
+            }
+        }
+        if (!alreadyExist) {
+            boolean methodResult = datasource.updateNumber(oldNumber, newNumber);
+            if (methodResult) {
+                var changedItem = collectionItems.get(oldNumber);
+                changedItem.setId(newNumber);
+                collectionItems.remove(oldNumber);
+                collectionItems.put(newNumber, changedItem);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Image changeImage(int id, File img) {
+
+        Image resizedImage = resizeAndSaveImageFromFile(img);
+        boolean methodResult = datasource.changeItemImage(id, tempFile);
+        if (methodResult) {
+            CollectionItem collectionItem = collectionItems.get(id);
+            collectionItem.setImage(resizedImage);
+            return resizedImage;
+        }
+        return null;
+    }
+
+    public boolean updateItemName(int id, String newName) {
+
+        boolean methodResult = datasource.changeItemName(id, newName);
+        if (methodResult) {
+            collectionItems.get(id).setName(newName);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeItem(int itemId) {
+
+        boolean methodResult = datasource.removeItemFromDb(itemId);
+
+        if (methodResult) {
+            boolean isOwned = collectionItems.get(itemId).isOwned;
+            if (isOwned) {
+                numberOfItemsOwned--;
+            }
+            totalNumberOfItems--;
+            collectionItems.remove(itemId);
+            return true;
+        }
+        return false;
     }
 }

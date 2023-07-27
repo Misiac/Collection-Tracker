@@ -25,11 +25,7 @@ public class Application extends javafx.application.Application {
         stage.setScene(scene);
         stage.show();
         stage.setResizable(false);
-        //^ maybe someday?
-
-
     }
-
     public static void main(String[] args) {
         launch();
     }
@@ -44,6 +40,5 @@ public class Application extends javafx.application.Application {
             Files.delete(generatedImage.toPath());
         }
         super.stop();
-
     }
 }
