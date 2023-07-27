@@ -118,7 +118,7 @@ public class MainWindowController {
                 currentCollectionName
         );
 
-        if (result != null && !result.equals("")) {
+        if (result != null && !result.isEmpty()) {
             var currentCollection = collectionMap.get(currentCollectionName);
             String oldName = currentCollection.getCollectionName();
 
@@ -321,7 +321,7 @@ public class MainWindowController {
                 itemName.getText()
         );
 
-        if (result != null && !result.equals("")) {
+        if (result != null && !result.isEmpty()) {
             var currentCollection = collectionMap.get(currentCollectionName);
 
             String id = itemIdLabel.getText();
@@ -349,7 +349,7 @@ public class MainWindowController {
 
         Optional<String> result = tiDialog.showAndWait();
         if (result.isPresent()) {
-            if (!result.get().equals("")) {
+            if (!result.get().isEmpty()) {
                 try {
                     int newNumber = Integer.parseInt(result.get());
                     int parsedOldNumber = Integer.parseInt(oldNumber);
