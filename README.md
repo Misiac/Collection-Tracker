@@ -12,8 +12,10 @@
 <p align="center">
 	<a href="#description">Description</a> •
   <a href="#key-features">Key Features</a> •
+  <a href="#requirements">Requirements</a> •
   <a href="#how-to-use">How To Use</a> •
   <a href="#credits">Credits</a> 
+	
 </p>
 
 ![screenshot](screenshot.png)
@@ -39,6 +41,7 @@ I did not use several framework features such as binding because I didn't know t
 * Share collection
 	  - Share collection with people like you. Just give them a collection file.
 	  - Or generate new non-selected collection using context menu so your friends can select what they own!
+## Requirements
 
 ## How To Use
 
