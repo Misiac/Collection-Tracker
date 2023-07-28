@@ -54,13 +54,13 @@ public class MainWindowController {
     private final Map<String, Collection> collectionMap = new HashMap<>();
     private final Map<String, ToggleButton> buttonMap = new HashMap<>();
     private final Map<CheckBox, Integer> checkBoxMap = new HashMap<>();
-    private String currentCollectionName;
+    private Collection currentCollection;
     boolean isCreationModeEnabled;
     DialogHelper dialogHelper = DialogHelper.INSTANCE;
 
     public void initialize() {
         buttonsGroup = new ToggleGroup();
-        currentCollectionName = null;
+        currentCollection = null;
         isCreationModeEnabled = false;
         resetStackPane();
 
@@ -115,11 +115,10 @@ public class MainWindowController {
                 "Change collection name",
                 "Enter new name \n(Filename won't change)",
                 "Name:",
-                currentCollectionName
+                currentCollection.getCollectionName()
         );
 
         if (result != null && !result.isEmpty()) {
-            var currentCollection = collectionMap.get(currentCollectionName);
             String oldName = currentCollection.getCollectionName();
 
             var currentColBtn = buttonMap.get(oldName);
@@ -134,23 +133,21 @@ public class MainWindowController {
 
             collectionNameLabel.setText(result);
 
-            currentCollectionName = result;
         }
     }
 
     private void unloadCollection() {
 
-        var currentCol = collectionMap.get(currentCollectionName);
-        currentCol.unload();
-        collectionMap.remove(currentCollectionName);
+        currentCollection.unload();
+        collectionMap.remove(currentCollection.getCollectionName());
 
         flowPane.getChildren().clear();
         checkBoxMap.clear();
-        leftVBox.getChildren().remove(buttonMap.get(currentCollectionName));
+        leftVBox.getChildren().remove(buttonMap.get(currentCollection.getCollectionName()));
         resetStackPane();
 
         collectionImage.setImage(null);
-        currentCollectionName = null;
+        currentCollection = null;
     }
 
     private void resetStackPane() {
@@ -163,7 +160,7 @@ public class MainWindowController {
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File targetDir = directoryChooser.showDialog(rootPane.getScene().getWindow());
-        var currentCol = collectionMap.get(currentCollectionName);
+        var currentCol = collectionMap.get(currentCollection.getCollectionName());
         if (targetDir != null) {
             currentCol.copyCollection(targetDir);
         }
@@ -174,11 +171,11 @@ public class MainWindowController {
         File newImg = dialogHelper.showCustomFileChooser(rootPane, DialogHelper.FileChooserType.IMG);
 
         if (newImg != null) {
-            var currentCol = collectionMap.get(currentCollectionName);
-            currentCol.updateBgImage(newImg);
+
+            currentCollection.updateBgImage(newImg);
             collectionImage.setFitHeight(stackPane.getMaxHeight());
             collectionImage.setFitWidth(stackPane.getMaxWidth());
-            collectionImage.setImage(currentCol.getBackgroundImage());
+            collectionImage.setImage(currentCollection.getBackgroundImage());
         }
     }
 
@@ -198,8 +195,11 @@ public class MainWindowController {
     private void handleCollectionChange(ActionEvent actionEvent) {
         String selection = ((ToggleButton) actionEvent.getSource()).getText();
         Collection selectedCollection = collectionMap.get(selection);
-
-        if (!selectedCollection.getCollectionName().equals(currentCollectionName)) {
+        if (currentCollection == null) {
+            renderCollection(selectedCollection);
+            return;
+        }
+        if (!selectedCollection.getCollectionName().equals(currentCollection.getCollectionName())) {
             renderCollection(selectedCollection);
         } else {
             ((ToggleButton) actionEvent.getSource()).setSelected(true);
@@ -281,12 +281,11 @@ public class MainWindowController {
         if (isCreationModeEnabled) {
             addButton.setVisible(true);
         }
-        currentCollectionName = collection.getCollectionName();
+        currentCollection = collection;
     }
 
     private void handleRemoveItem(Label itemIdLabel, GridPane gridPane) {
 
-        var currentCollection = collectionMap.get(currentCollectionName);
         String id = itemIdLabel.getText();
         id = id.substring(id.indexOf(":") + 2);
         boolean methodResult = currentCollection.removeItem(Integer.parseInt(id));
@@ -302,7 +301,6 @@ public class MainWindowController {
         File img = dialogHelper.showCustomFileChooser(rootPane, DialogHelper.FileChooserType.IMG);
         if (img != null) {
 
-            var currentCollection = collectionMap.get(currentCollectionName);
             String labelText = itemIdLabel.getText();
             int itemId = Integer.parseInt(labelText.substring(labelText.indexOf(":") + 2));
             Image newImage = currentCollection.changeImage(itemId, img);
@@ -322,7 +320,6 @@ public class MainWindowController {
         );
 
         if (result != null && !result.isEmpty()) {
-            var currentCollection = collectionMap.get(currentCollectionName);
 
             String id = itemIdLabel.getText();
             id = id.substring(id.indexOf(":") + 2);
@@ -368,7 +365,6 @@ public class MainWindowController {
                         );
 
                     } else {
-                        var currentCollection = collectionMap.get(currentCollectionName);
                         boolean methodResult = currentCollection.changeNumber(parsedOldNumber, newNumber);
                         if (methodResult) {
                             oldNumberLabel.setText("Number: " + newNumber);
@@ -395,7 +391,6 @@ public class MainWindowController {
         int selectedItemID = checkBoxMap.get((CheckBox) e.getSource());
         boolean currentCheckBoxStatus = ((CheckBox) e.getSource()).isSelected();
 
-        Collection currentCollection = collectionMap.get(currentCollectionName);
         if (currentCollection.getDatasource().updateItemInfo(selectedItemID, currentCheckBoxStatus)) {
             currentCollection.getCollectionItems().get(selectedItemID).setOwned(currentCheckBoxStatus);
             currentCollection.updateOwnedStatus(currentCheckBoxStatus);
@@ -438,7 +433,7 @@ public class MainWindowController {
     public void handleCreationModeSwitch() {
         isCreationModeEnabled ^= true;
         creationButton.setVisible(isCreationModeEnabled);
-        if (currentCollectionName != null) {
+        if (currentCollection != null) {
             addButton.setVisible(isCreationModeEnabled);
         }
         Stage stage = (Stage) rootPane.getScene().getWindow();
@@ -522,7 +517,6 @@ public class MainWindowController {
             }
         } while (!controller.isInputOkay());
 
-        Collection currentCollection = collectionMap.get(currentCollectionName);
         currentCollection.addItem(
                 controller.getNewName(),
                 controller.getNewNumber(),
@@ -574,5 +568,4 @@ public class MainWindowController {
 
         alert.showAndWait();
     }
-
 }
