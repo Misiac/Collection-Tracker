@@ -22,7 +22,6 @@ public class DataSource {
     private PreparedStatement queryInfo;
     private PreparedStatement updateItemStatus;
     private PreparedStatement changeNumber;
-    private PreparedStatement insertIntoItemsCreation;
     private PreparedStatement insertNewItem;
     private PreparedStatement updateDbName;
     private PreparedStatement changeItemImage;
@@ -92,7 +91,7 @@ public class DataSource {
 
             String insertIntoItemsCreationStatement = "INSERT INTO Info VALUES(?,?)";
 
-            insertIntoItemsCreation = connection.prepareStatement(insertIntoItemsCreationStatement);
+            PreparedStatement insertIntoItemsCreation = connection.prepareStatement(insertIntoItemsCreationStatement);
             statementsSet.add(insertIntoItemsCreation);
             if (!prepareStatements()) {
                 throw new SQLException();
