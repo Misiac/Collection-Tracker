@@ -77,7 +77,6 @@ public class MainWindowController {
         StackPane.setAlignment(collectedNumber, Pos.BOTTOM_RIGHT);
 
         creationButton.setVisible(false);
-        addButton.setVisible(false);
 
         MenuItem item1 = new MenuItem("Share non-selected collection");
         item1.setOnAction(e -> shareCollection());
@@ -128,7 +127,6 @@ public class MainWindowController {
             collectionMap.put(result, currentCollection);
 
             collectionNameLabel.setText(result);
-
         }
     }
 
@@ -271,11 +269,10 @@ public class MainWindowController {
 
             flowPane.getChildren().add(gridPane);
         }
-
         menuButton.setVisible(true);
-        flowPane.getChildren().add(addButton);
+
         if (isCreationModeEnabled) {
-            addButton.setVisible(true);
+            flowPane.getChildren().add(addButton);
         }
         currentCollection = collection;
     }
@@ -428,9 +425,9 @@ public class MainWindowController {
     @FXML
     public void handleCreationModeSwitch() {
         isCreationModeEnabled ^= true;
-        creationButton.setVisible(isCreationModeEnabled);
         if (currentCollection != null) {
-            addButton.setVisible(isCreationModeEnabled);
+            if (isCreationModeEnabled) flowPane.getChildren().add(addButton);
+            else flowPane.getChildren().remove(addButton);
         }
         Stage stage = (Stage) rootPane.getScene().getWindow();
         if (isCreationModeEnabled) {
