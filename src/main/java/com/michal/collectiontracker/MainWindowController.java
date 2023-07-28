@@ -466,7 +466,7 @@ public class MainWindowController {
 
                     showCustomAlert(Alert.AlertType.WARNING,
                             "Collection exists",
-                            "Collection with the choosen path and name already exists",
+                            "Collection with the chosen path and name already exists",
                             "Choose another name or path"
                     );
                 }
@@ -517,8 +517,8 @@ public class MainWindowController {
         renderCollection(currentCollection);
     }
 
-    private void createNewCollection(TextField newName, File choosenDirectory, File choosenImg) {
-        Collection newCollection = new Collection(newName, choosenDirectory, choosenImg);
+    private void createNewCollection(TextField newName, File chosenDirectory, File chosenImg) {
+        Collection newCollection = new Collection(newName, chosenDirectory, chosenImg);
         loadCollection(newCollection);
     }
 
