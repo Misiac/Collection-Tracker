@@ -13,17 +13,17 @@
 #addButton:selected {
     -fx-background-color: #333333;
 
-    /* hovered over, but not selected */
-}
 
+}
+    /* hovered over, but not selected */
 .toggle-button:hover,
 #creationButton:hover,
 #addButton:hover {
     -fx-background-color: #4D4D4D;
 
-    /* hovered over and selected */
-}
 
+}
+    /* hovered over and selected */
 .toggle-button:hover:selected {
     -fx-background-color: #777777;
 }
