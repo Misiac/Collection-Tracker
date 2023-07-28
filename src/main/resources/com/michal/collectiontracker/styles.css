@@ -15,7 +15,8 @@
 
 
 }
-    /* hovered over, but not selected */
+
+/* hovered over, but not selected */
 .toggle-button:hover,
 #creationButton:hover,
 #addButton:hover {
@@ -23,7 +24,8 @@
 
 
 }
-    /* hovered over and selected */
+
+/* hovered over and selected */
 .toggle-button:hover:selected {
     -fx-background-color: #777777;
 }
@@ -35,8 +37,9 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0.5, 0), 15, 15.0, 0, 5);
 
 }
-#menuButton{
--fx-background-color: transparent;
+
+#menuButton {
+    -fx-background-color: transparent;
 }
 
 #stackPane {
@@ -72,14 +75,17 @@
     -fx-font-size: 30;
     -fx-font-weight: bold;
     -fx-text-fill: white;
-    -fx-effect: dropshadow( gaussian , black , 3 , 0.5 , 0 , 0 );
+    -fx-effect: dropshadow(gaussian, black, 3, 0.5, 0, 0);
 }
-#collectionNameLabel{
--fx-padding: 0 0 0 7px;
+
+#collectionNameLabel {
+    -fx-padding: 0 0 0 7px;
 }
-#collectedNumber{
--fx-padding:0 7 0 0 px;
+
+#collectedNumber {
+    -fx-padding: 0 7 0 0px;
 }
+
 #addButton {
     -fx-font-size: 12;
     -font-family: 'JetBrains Mono', monospace;
@@ -87,7 +93,8 @@
     -fx-text-fill: white;
 }
 
-#addButton:hover:selected {}
+#addButton:hover:selected {
+}
 
 .dialog-pane {
     -fx-background-color: #383838;
@@ -113,6 +120,7 @@
 .dialog-pane .button:hover {
     -fx-background-color: #454545;
 }
+
 .alert:header *.header-panel {
     -fx-background-color: #383838;
 }
@@ -125,13 +133,16 @@
 .itemName {
     -fx-font-weight: bold;
 }
-.context-menu{
--fx-background-color: #2C2C2C;
+
+.context-menu {
+    -fx-background-color: #2C2C2C;
 
 }
-.menu-item .label{
--fx-text-fill: white;
+
+.menu-item .label {
+    -fx-text-fill: white;
 }
+
 .itemId {
     -fx-font-size: 12;
     -fx-padding: 0 0 0 7px;
@@ -168,25 +179,25 @@
     -fx-background-insets: 0, 0, 0, 2;
 }
 
-.scroll-pane>.scroll-bar:vertical>.increment-button,
-.scroll-pane>.scroll-bar:vertical>.decrement-button {
+.scroll-pane > .scroll-bar:vertical > .increment-button,
+.scroll-pane > .scroll-bar:vertical > .decrement-button {
     -fx-padding: 0 0 0 0;
 }
 
-.scroll-bar>.increment-button,
-.scroll-bar>.decrement-button {
+.scroll-bar > .increment-button,
+.scroll-bar > .decrement-button {
     -fx-padding: 0 0 0 0;
 }
 
-.scroll-bar:vertical>.increment-button,
-.scroll-bar:vertical>.decrement-button {
+.scroll-bar:vertical > .increment-button,
+.scroll-bar:vertical > .decrement-button {
     -fx-background-insets: 0 0 0 0, 0 0 0 0, 0 0 0 0;
 }
 
-.scroll-bar:vertical>.decrement-button>.decrement-arrow {
+.scroll-bar:vertical > .decrement-button > .decrement-arrow {
     -fx-padding: 0 0 0 0;
 }
 
-.scroll-bar:vertical>.increment-button>.increment-arrow {
+.scroll-bar:vertical > .increment-button > .increment-arrow {
     -fx-padding: 0 0 0 0;
 }
