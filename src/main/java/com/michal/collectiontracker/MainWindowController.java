@@ -49,19 +49,16 @@ public class MainWindowController {
     public ScrollPane scrollPane;
     @FXML
     public Button menuButton;
-    Button addButton;
-    ToggleGroup buttonsGroup;
+    Button addButton = new Button("Add item");
+    ToggleGroup buttonsGroup = new ToggleGroup();
     private final Map<String, Collection> collectionMap = new HashMap<>();
     private final Map<String, ToggleButton> buttonMap = new HashMap<>();
     private final Map<CheckBox, Integer> checkBoxMap = new HashMap<>();
-    private Collection currentCollection;
-    boolean isCreationModeEnabled;
+    private Collection currentCollection = null;
+    boolean isCreationModeEnabled = false;
     DialogHelper dialogHelper = DialogHelper.INSTANCE;
 
     public void initialize() {
-        buttonsGroup = new ToggleGroup();
-        currentCollection = null;
-        isCreationModeEnabled = false;
         resetStackPane();
 
         scrollPane.setStyle("-fx-background-color:transparent;");
@@ -69,7 +66,6 @@ public class MainWindowController {
         scrollPane.fitToWidthProperty().set(true);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
-        addButton = new Button("Add item");
         addButton.setId("addButton");
         FlowPane.setMargin(addButton, new Insets(20, 0, 0, 10));
         addButton.setGraphic(new ImageView(
