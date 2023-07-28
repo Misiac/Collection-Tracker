@@ -15,7 +15,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -57,6 +56,7 @@ public class MainWindowController {
     private final Map<CheckBox, Integer> checkBoxMap = new HashMap<>();
     private String currentCollectionName;
     boolean isCreationModeEnabled;
+    DialogHelper dialogHelper = DialogHelper.INSTANCE;
 
     public void initialize() {
         buttonsGroup = new ToggleGroup();
@@ -111,7 +111,7 @@ public class MainWindowController {
 
     private void changeCollectionName() {
 
-        String result = showCustomTextInputDialog(
+        String result = dialogHelper.showCustomTextInputDialog(
                 "Change collection name",
                 "Enter new name \n(Filename won't change)",
                 "Name:",
@@ -171,7 +171,7 @@ public class MainWindowController {
 
     private void handleUpdateBgImage() {
 
-        File newImg = showCustomFileChooser(FileChooserType.IMG);
+        File newImg = dialogHelper.showCustomFileChooser(rootPane, DialogHelper.FileChooserType.IMG);
 
         if (newImg != null) {
             var currentCol = collectionMap.get(currentCollectionName);
@@ -184,7 +184,7 @@ public class MainWindowController {
 
     @FXML
     public void chooseCollectionFile() {
-        File file = showCustomFileChooser(FileChooserType.SAV);
+        File file = dialogHelper.showCustomFileChooser(rootPane, DialogHelper.FileChooserType.SAV);
         if (file == null) return;
         try {
             Collection newCollection = new Collection(file);
@@ -299,7 +299,7 @@ public class MainWindowController {
 
     private void handleImageChange(Label itemIdLabel, ImageView imageView) {
 
-        File img = showCustomFileChooser(FileChooserType.IMG);
+        File img = dialogHelper.showCustomFileChooser(rootPane, DialogHelper.FileChooserType.IMG);
         if (img != null) {
 
             var currentCollection = collectionMap.get(currentCollectionName);
@@ -314,7 +314,7 @@ public class MainWindowController {
 
     private void handleItemNameChange(Label itemIdLabel, Label itemName) {
 
-        String result = showCustomTextInputDialog(
+        String result = dialogHelper.showCustomTextInputDialog(
                 "Change item name",
                 "Enter new name",
                 "Name:",
@@ -536,26 +536,26 @@ public class MainWindowController {
     }
 
     private void loadCollection(Collection collection) {
-            if (!collectionMap.containsKey(collection.getCollectionName())) {
+        if (!collectionMap.containsKey(collection.getCollectionName())) {
 
-                collectionMap.put(collection.getCollectionName(), collection);
+            collectionMap.put(collection.getCollectionName(), collection);
 
-                ToggleButton button = new ToggleButton(collection.getCollectionName());
-                button.setAlignment(Pos.BOTTOM_LEFT);
-                button.setMaxWidth(Double.MAX_VALUE);
-                button.setPrefHeight(55);
-                button.setWrapText(true);
-                button.setToggleGroup(buttonsGroup);
-                button.setOnAction(this::handleCollectionChange);
+            ToggleButton button = new ToggleButton(collection.getCollectionName());
+            button.setAlignment(Pos.BOTTOM_LEFT);
+            button.setMaxWidth(Double.MAX_VALUE);
+            button.setPrefHeight(55);
+            button.setWrapText(true);
+            button.setToggleGroup(buttonsGroup);
+            button.setOnAction(this::handleCollectionChange);
 
-                buttonMap.put(collection.getCollectionName(), button);
-                leftVBox.getChildren().add(button);
-            } else {
-                showCustomAlert(Alert.AlertType.WARNING,
-                        "Already loaded",
-                        "Selected collection is already loaded",
-                        "Choose another file");
-            }
+            buttonMap.put(collection.getCollectionName(), button);
+            leftVBox.getChildren().add(button);
+        } else {
+            showCustomAlert(Alert.AlertType.WARNING,
+                    "Already loaded",
+                    "Selected collection is already loaded",
+                    "Choose another file");
+        }
     }
 
     private void showCustomAlert(Alert.AlertType type, String title, String headerText, String contentText) {
@@ -575,39 +575,4 @@ public class MainWindowController {
         alert.showAndWait();
     }
 
-   private enum FileChooserType {
-        SAV,
-        IMG
-    }
-
-    private File showCustomFileChooser(FileChooserType type) {
-        FileChooser fileChooser = new FileChooser();
-        if (type == FileChooserType.IMG) {
-            fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("Image", "*.jpg", "*.png"));
-        } else if (type == FileChooserType.SAV) {
-            fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("CT save files", "*.sav"));
-        }
-        return fileChooser.showOpenDialog(rootPane.getScene().getWindow());
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    private String showCustomTextInputDialog(String title, String header, String contentText, String setText) {
-        TextInputDialog tiDialog = new TextInputDialog();
-        tiDialog.getDialogPane().getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
-        tiDialog.getDialogPane().getStyleClass().add("alert");
-
-        Stage dialogStage = (Stage) tiDialog.getDialogPane().getScene().getWindow();
-        dialogStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("img/icon.png"))));
-
-        tiDialog.setTitle(title);
-        tiDialog.setHeaderText(header);
-        tiDialog.setContentText(contentText);
-        if (setText != null) {
-            tiDialog.getEditor().setText(setText);
-        }
-        Optional<String> result = tiDialog.showAndWait();
-        return result.orElse(null);
-    }
 }
