@@ -1,6 +1,5 @@
 package com.michal.collectiontracker.datamodel;
 
-
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -52,34 +51,37 @@ public class Collection {
 
     public Collection(File collectionFile) throws SQLException {
         datasource = new DataSource(collectionFile.getAbsolutePath());
-        ResultSet items = datasource.queryItems();
-        this.filePath = collectionFile.toPath();
+        try (ResultSet items = datasource.queryItems()) {
 
-        numberOfItemsOwned = 0;
+            this.filePath = collectionFile.toPath();
 
-        while (items.next()) {
-            CollectionItem newItem = new CollectionItem();
+            numberOfItemsOwned = 0;
 
-            newItem.setId(items.getInt(1));
-            newItem.setName(items.getString(2));
-            if (items.getInt(4) == 1) {
-                newItem.setOwned(true);
-                numberOfItemsOwned++;
+            while (items.next()) {
+                CollectionItem newItem = new CollectionItem();
 
-            } else {
-                newItem.setOwned(false);
+                newItem.setId(items.getInt(1));
+                newItem.setName(items.getString(2));
+                if (items.getInt(4) == 1) {
+                    newItem.setOwned(true);
+                    numberOfItemsOwned++;
+
+                } else {
+                    newItem.setOwned(false);
+                }
+                totalNumberOfItems++;
+
+                InputStream inputStream = items.getBinaryStream(3);
+                newItem.setImage(new Image(inputStream));
+                collectionItems.put(newItem.getId(), newItem);
             }
-            totalNumberOfItems++;
-
-            InputStream inputStream = items.getBinaryStream(3);
-            newItem.setImage(new Image(inputStream));
-            collectionItems.put(newItem.getId(), newItem);
-
         }
-        ResultSet collectionInfo = datasource.queryCollectionInfo();
-        this.collectionName = collectionInfo.getString(1);
-        if (collectionInfo.getBinaryStream(2) != null) {
-            this.backgroundImage = new Image(collectionInfo.getBinaryStream(2));
+        try (ResultSet collectionInfo = datasource.queryCollectionInfo()) {
+
+            this.collectionName = collectionInfo.getString(1);
+            if (collectionInfo.getBinaryStream(2) != null) {
+                this.backgroundImage = new Image(collectionInfo.getBinaryStream(2));
+            }
         }
     }
 
