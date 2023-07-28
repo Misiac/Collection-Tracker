@@ -30,13 +30,6 @@ public class DataSource {
     private PreparedStatement removeItem;
     private final Set<PreparedStatement> statementsSet = new HashSet<>();
 
-    private void initializeClose() {
-        statementsSet.addAll(List.of(queryItems, updateBgImage, queryInfo, updateItemStatus,
-                changeNumber, insertIntoItemsCreation, insertNewItem, updateDbName,
-                changeItemImage, changeItemName, removeItem));
-    }
-
-
     public DataSource(String absolutePath) {
         this.CONNECTION_STRING = CONNECTION_STRING_START + absolutePath;
         try {
@@ -63,6 +56,10 @@ public class DataSource {
             changeItemImage = connection.prepareStatement("UPDATE Items SET PHOTO = ? WHERE ID = ?");
             changeItemName = connection.prepareStatement("UPDATE Items SET NAME = ? WHERE ID = ?");
             removeItem = connection.prepareStatement("DELETE FROM Items WHERE ID = ?");
+
+            statementsSet.addAll(List.of(queryItems, updateBgImage, queryInfo, updateItemStatus,
+                    changeNumber, insertNewItem, updateDbName,
+                    changeItemImage, changeItemName, removeItem));
         } catch (SQLException e) {
             System.out.println("SQLException => " + e.getMessage());
             return false;
@@ -96,6 +93,7 @@ public class DataSource {
             String insertIntoItemsCreationStatement = "INSERT INTO Info VALUES(?,?)";
 
             insertIntoItemsCreation = connection.prepareStatement(insertIntoItemsCreationStatement);
+            statementsSet.add(insertIntoItemsCreation);
             if (!prepareStatements()) {
                 throw new SQLException();
             }
@@ -166,7 +164,6 @@ public class DataSource {
     }
 
     public void close() {
-        initializeClose();
         try {
             for (PreparedStatement statement : statementsSet) {
                 if (statement != null) {
