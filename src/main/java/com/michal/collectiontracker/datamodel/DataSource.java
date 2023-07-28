@@ -8,6 +8,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class DataSource {
 
@@ -25,6 +28,13 @@ public class DataSource {
     private PreparedStatement changeItemImage;
     private PreparedStatement changeItemName;
     private PreparedStatement removeItem;
+    private final Set<PreparedStatement> statementsSet = new HashSet<>();
+
+    private void initializeClose() {
+        statementsSet.addAll(List.of(queryItems, updateBgImage, queryInfo, updateItemStatus,
+                changeNumber, insertIntoItemsCreation, insertNewItem, updateDbName,
+                changeItemImage, changeItemName, removeItem));
+    }
 
 
     public DataSource(String absolutePath) {
@@ -156,39 +166,12 @@ public class DataSource {
     }
 
     public void close() {
+        initializeClose();
         try {
-            if (queryItems != null) {
-                queryItems.close();
-            }
-            if (queryInfo != null) {
-                queryInfo.close();
-            }
-            if (updateItemStatus != null) {
-                updateItemStatus.close();
-            }
-            if (insertIntoItemsCreation != null) {
-                insertIntoItemsCreation.close();
-            }
-            if (insertNewItem != null) {
-                insertNewItem.close();
-            }
-            if (updateBgImage != null) {
-                updateBgImage.close();
-            }
-            if (updateDbName != null) {
-                updateDbName.close();
-            }
-            if (changeItemImage != null) {
-                changeItemImage.close();
-            }
-            if (changeNumber != null) {
-                changeNumber.close();
-            }
-            if (changeItemName != null) {
-                changeItemName.close();
-            }
-            if (removeItem != null) {
-                removeItem.close();
+            for (PreparedStatement statement : statementsSet) {
+                if (statement != null) {
+                    statement.close();
+                }
             }
             if (connection != null) {
                 connection.close();
