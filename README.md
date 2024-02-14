@@ -53,6 +53,7 @@ download the jar from releases section, or build your own with
 ```
 mvn install
 ```
+Create your first own collection, by toggling the creation mode in menu bar
 
 ## Credits
 https://swiatkolekcji.com/ - for images on screenshot
