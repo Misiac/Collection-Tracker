@@ -424,7 +424,9 @@ public class MainWindowController {
 
     @FXML
     public void handleCreationModeSwitch() {
+
         isCreationModeEnabled ^= true;
+        creationButton.setVisible(isCreationModeEnabled);
         if (currentCollection != null) {
             if (isCreationModeEnabled) flowPane.getChildren().add(addButton);
             else flowPane.getChildren().remove(addButton);
