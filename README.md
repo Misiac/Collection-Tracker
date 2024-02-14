@@ -24,8 +24,6 @@ Collection Tracker is a JavaFX application designed for hobbyists and collectors
 
 <strong> Collection Tracker is not intended for commercial use purposes. This is my first project in JavaFX, and it was made to get to know the framework and for fun.
  I'll be using it though! </strong>
- 
-I did not use several framework features such as binding because I didn't know them at that point.
 
 ## Key Features
 
