@@ -49,9 +49,9 @@ To clone the repo use
 git clone https://github.com/Misiac/Collection-Tracker.git
 ```
 You can use it via your IDE
-or build the jlink package with
+or download the jar from releases section, or build your own with
 ```
-mvn javafx:jlink
+mvn install
 ```
 
 ## Credits
