@@ -48,8 +48,8 @@ To clone the repo use
 ```
 git clone https://github.com/Misiac/Collection-Tracker.git
 ```
-You can use it via your IDE
-or download the jar from releases section, or build your own with
+You can use it via your IDE,
+download the jar from releases section, or build your own with
 ```
 mvn install
 ```
