@@ -42,6 +42,7 @@ Collection Tracker is a JavaFX application designed for hobbyists and collectors
 ## Requirements
 * At least 1280x720 (HD) resolution screen
 * JDK 17
+* Tested only on Windows 
 ## How To Use
 
 To clone the repo use
