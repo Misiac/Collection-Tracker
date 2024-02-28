@@ -42,17 +42,19 @@ Collection Tracker is a JavaFX application designed for hobbyists and collectors
 ## Requirements
 * At least 1280x720 (HD) resolution screen
 * JDK 17
+* Tested only on Windows 
 ## How To Use
 
 To clone the repo use
 ```
 git clone https://github.com/Misiac/Collection-Tracker.git
 ```
-You can use it via your IDE
-or build the jlink package with
+You can use it via your IDE,
+download the jar from releases section, or build your own with
 ```
-mvn javafx:jlink
+mvn install
 ```
+Create your first own collection, by toggling the creation mode in menu bar
 
 ## Credits
 https://swiatkolekcji.com/ - for images on screenshot
